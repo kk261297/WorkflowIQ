@@ -1,0 +1,1135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutomateIQ Casebot</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0e1a;
+            --bg-secondary: #111827;
+            --bg-card: #1a2035;
+            --bg-card-hover: #1f2847;
+            --bg-input: #0f1629;
+            --border: #2a3555;
+            --border-active: #4f6ef7;
+            --text-primary: #e8ecf4;
+            --text-secondary: #8892a8;
+            --text-muted: #5a6580;
+            --accent: #4f6ef7;
+            --accent-glow: rgba(79, 110, 247, 0.3);
+            --accent-gradient: linear-gradient(135deg, #4f6ef7 0%, #7c5cfc 50%, #a855f7 100%);
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --radius: 12px;
+            --radius-lg: 16px;
+            --shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        /* ─── Header ─── */
+        .header {
+            padding: 20px 40px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: var(--bg-secondary);
+        }
+
+        .brand-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--accent-gradient);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            box-shadow: 0 4px 16px var(--accent-glow);
+        }
+
+        .brand h1 {
+            font-size: 20px;
+            font-weight: 700;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .brand-sub {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        .header-right {
+            margin-left: auto;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .status-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            padding: 6px 14px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--success);
+        }
+
+        /* ─── Sections ─── */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* ─── Input Section ─── */
+        .input-section {
+            padding: 40px 0 32px;
+        }
+
+        .input-section h2 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .input-section p {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
+
+        .input-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .input-group input,
+        .input-group textarea,
+        .input-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+            background: var(--bg-input);
+            color: var(--text-primary);
+            border-radius: var(--radius);
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+
+        .input-group textarea {
+            resize: vertical;
+            min-height: 80px;
+            line-height: 1.5;
+        }
+
+        .input-group input:focus,
+        .input-group textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+        }
+
+        .context-area {
+            grid-column: 1 / -1;
+        }
+
+        .filter-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: var(--radius);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--accent-gradient);
+            color: white;
+            box-shadow: 0 4px 12px var(--accent-glow);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px var(--accent-glow);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .btn-sm {
+            padding: 8px 14px;
+            font-size: 12px;
+        }
+
+        .action-row {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .filter-toggle {
+            color: var(--text-secondary);
+            font-size: 13px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-bottom: 12px;
+        }
+
+        .filter-toggle:hover {
+            color: var(--accent);
+        }
+
+        .filters-panel {
+            display: none;
+            margin-bottom: 16px;
+        }
+
+        .filters-panel.open {
+            display: block;
+        }
+
+        /* ─── Progress ─── */
+        .progress-section {
+            display: none;
+            padding: 24px 0;
+        }
+
+        .progress-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            text-align: center;
+        }
+
+        .progress-bar-wrapper {
+            height: 6px;
+            background: var(--border);
+            border-radius: 3px;
+            margin: 16px 0;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: var(--accent-gradient);
+            border-radius: 3px;
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+
+        .progress-status {
+            font-size: 14px;
+            color: var(--text-secondary);
+            min-height: 20px;
+        }
+
+        .progress-step {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--text-muted);
+            padding: 4px 0;
+        }
+
+        .progress-step.active {
+            color: var(--accent);
+        }
+
+        .progress-step.done {
+            color: var(--success);
+        }
+
+        .progress-steps {
+            text-align: left;
+            margin-top: 16px;
+        }
+
+        /* ─── Results Section ─── */
+        .results-section {
+            display: none;
+            padding: 0 0 40px;
+        }
+
+        .results-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .results-header h2 {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .results-count {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .recommendation-box {
+            background: linear-gradient(135deg, rgba(79, 110, 247, 0.08), rgba(168, 85, 247, 0.08));
+            border: 1px solid rgba(79, 110, 247, 0.25);
+            border-radius: var(--radius);
+            padding: 16px;
+            margin-bottom: 24px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .recommendation-box .label {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        /* ─── Ranking Cards ─── */
+        .ranking-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .ranking-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 18px;
+            display: grid;
+            grid-template-columns: 60px 1fr auto;
+            gap: 16px;
+            align-items: start;
+            transition: all 0.2s;
+        }
+
+        .ranking-card:hover {
+            border-color: var(--accent);
+            background: var(--bg-card-hover);
+        }
+
+        .score-circle {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 800;
+            position: relative;
+        }
+
+        .score-circle::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            border: 3px solid var(--border);
+        }
+
+        .score-circle.high {
+            color: var(--success);
+        }
+
+        .score-circle.high::before {
+            border-color: var(--success);
+        }
+
+        .score-circle.mid {
+            color: var(--warning);
+        }
+
+        .score-circle.mid::before {
+            border-color: var(--warning);
+        }
+
+        .score-circle.low {
+            color: var(--text-muted);
+        }
+
+        .score-circle.low::before {
+            border-color: var(--text-muted);
+        }
+
+        .ranking-info h3 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            line-height: 1.4;
+        }
+
+        .ranking-meta {
+            display: flex;
+            gap: 12px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .ranking-meta span {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        .ranking-reason {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            border-top: 1px solid var(--border);
+            padding-top: 8px;
+            margin-top: 4px;
+        }
+
+        .ranking-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            min-width: 90px;
+        }
+
+        /* ─── Chat Follow-up ─── */
+        .chat-section {
+            display: none;
+            padding: 0 0 40px;
+        }
+
+        .chat-section h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .chat-messages {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .msg {
+            max-width: 80%;
+            animation: fadeInUp 0.3s ease;
+        }
+
+        .msg.user {
+            align-self: flex-end;
+        }
+
+        .msg.ai {
+            align-self: flex-start;
+        }
+
+        .msg-bubble {
+            padding: 12px 16px;
+            border-radius: 14px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .msg.user .msg-bubble {
+            background: linear-gradient(135deg, #1e3a5f, #1a3360);
+            border: 1px solid #2d4a7a;
+            border-bottom-right-radius: 4px;
+        }
+
+        .msg.ai .msg-bubble {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-bottom-left-radius: 4px;
+        }
+
+        .msg-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .chat-input-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input-row input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+            background: var(--bg-input);
+            color: var(--text-primary);
+            border-radius: var(--radius);
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        .chat-input-row input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+        }
+
+        .send-btn {
+            width: 44px;
+            height: 44px;
+            border: none;
+            background: var(--accent-gradient);
+            color: white;
+            border-radius: var(--radius);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px var(--accent-glow);
+        }
+
+        .send-btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .send-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* ─── Modal ─── */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.open {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            width: 90%;
+            max-width: 900px;
+            max-height: 85vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-header {
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 24px;
+            display: flex;
+        }
+
+        .modal-close:hover {
+            color: var(--text-primary);
+        }
+
+        .modal-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+        }
+
+        .case-preview-content {
+            font-family: 'Times New Roman', serif;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        /* ─── Animations ─── */
+        .spinner {
+            width: 18px;
+            height: 18px;
+            border: 2px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            display: inline-block;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .pulsing {
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 3px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="brand-icon">⚡</div>
+        <div>
+            <div class="brand">
+                <h1>AutomateIQ Casebot</h1>
+            </div>
+            <div class="brand-sub">AI-Powered Legal Research</div>
+        </div>
+        <div class="header-right">
+            <div class="status-badge">
+                <div class="status-dot" id="statusDot"></div>
+                <span id="statusText">Ready</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- ── Step 1: Input ── -->
+        <div class="input-section" id="inputSection">
+            <h2>🔍 Search & Analyze Cases</h2>
+            <p>Enter your search keywords and describe your case. The AI will search, read, and rank up to 100 cases by
+                relevance — no PDF download needed.</p>
+
+            <div class="input-grid">
+                <div class="input-group">
+                    <label>Search Keywords</label>
+                    <input type="text" id="keywords" placeholder='e.g. "GST pre-deposit appeal interest"' />
+                </div>
+                <div class="input-group">
+                    <label>Number of Cases to Analyze</label>
+                    <select id="caseCount">
+                        <option value="30">30 cases (fast, ~2 min)</option>
+                        <option value="50">50 cases (~3 min)</option>
+                        <option value="100" selected>100 cases (thorough, ~6 min)</option>
+                    </select>
+                </div>
+                <div class="input-group context-area">
+                    <label>Describe Your Case / Context</label>
+                    <textarea id="context" rows="3"
+                        placeholder="e.g. Department should pay interest to taxpayer if decision is made in favour of taxpayer, while refunding pre-deposit paid while filing appeal"></textarea>
+                </div>
+            </div>
+
+            <div class="filter-toggle" onclick="document.getElementById('filtersPanel').classList.toggle('open')">
+                <span class="material-icons-round" style="font-size:16px">tune</span>
+                Advanced Filters
+                <span class="material-icons-round" style="font-size:16px">expand_more</span>
+            </div>
+
+            <div class="filters-panel" id="filtersPanel">
+                <div class="input-grid">
+                    <div class="input-group">
+                        <label>Court</label>
+                        <select id="filterCourt">
+                            <option value="">All Courts</option>
+                            <option value="Supreme Court">Supreme Court</option>
+                            <option value="High Court">High Court</option>
+                            <option value="Tribunal">Tribunal</option>
+                            <option value="Advance Ruling">Advance Ruling</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Sort By</label>
+                        <select id="filterSort">
+                            <option value="relevance">Relevance</option>
+                            <option value="date">Date (newest first)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="action-row">
+                <button class="btn btn-primary" id="analyzeBtn" onclick="runAnalysis()">
+                    <span class="material-icons-round" style="font-size:18px">psychology</span>
+                    Analyze Cases
+                </button>
+            </div>
+        </div>
+
+        <!-- ── Step 2: Progress ── -->
+        <div class="progress-section" id="progressSection">
+            <div class="progress-card">
+                <h3 style="margin-bottom:4px" id="progressTitle">Analyzing...</h3>
+                <div class="progress-status" id="progressStatus">Starting...</div>
+                <div class="progress-bar-wrapper">
+                    <div class="progress-bar-fill" id="progressBar"></div>
+                </div>
+                <div class="progress-steps" id="progressSteps"></div>
+            </div>
+        </div>
+
+        <!-- ── Step 3: Results ── -->
+        <div class="results-section" id="resultsSection">
+            <div class="results-header">
+                <h2>📊 Relevancy Rankings</h2>
+                <span class="results-count" id="resultsCount"></span>
+            </div>
+            <div id="recommendationBox"></div>
+            <div class="ranking-grid" id="rankingGrid"></div>
+        </div>
+
+        <!-- ── Chat Follow-up ── -->
+        <div class="chat-section" id="chatSection">
+            <h3>💬 Follow-up Questions</h3>
+            <div class="chat-messages" id="chatMessages"></div>
+            <div class="chat-input-row">
+                <input type="text" id="chatInput" placeholder="Ask a follow-up question..."
+                    onkeydown="if(event.key==='Enter')sendFollowup()" />
+                <button class="send-btn" id="sendBtn" onclick="sendFollowup()">
+                    <span class="material-icons-round">send</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Preview Modal -->
+    <div class="modal-overlay" id="previewModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="previewTitle">Case Preview</h3>
+                <button class="modal-close" onclick="document.getElementById('previewModal').classList.remove('open')">
+                    <span class="material-icons-round">close</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="case-preview-content" id="previewContent">Loading...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API = '';
+
+        // ── Run Analysis ──
+        async function runAnalysis() {
+            const keywords = document.getElementById('keywords').value.trim();
+            const context = document.getElementById('context').value.trim();
+            const count = parseInt(document.getElementById('caseCount').value);
+
+            if (!keywords) { alert('Please enter search keywords'); return; }
+            if (!context) { alert('Please describe your case / context'); return; }
+
+            // Switch to progress view
+            document.getElementById('inputSection').style.display = 'none';
+            document.getElementById('progressSection').style.display = 'block';
+            document.getElementById('resultsSection').style.display = 'none';
+            document.getElementById('chatSection').style.display = 'none';
+            setStatus('loading', 'Analyzing...');
+
+            const analyzeBtn = document.getElementById('analyzeBtn');
+            analyzeBtn.disabled = true;
+
+            try {
+                const response = await fetch(API + '/api/analyze', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ keywords, context, count })
+                });
+
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+                let buffer = '';
+                let totalCases = count;
+                let resultData = null;
+
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+
+                    buffer += decoder.decode(value, { stream: true });
+                    const lines = buffer.split('\n');
+                    buffer = lines.pop();
+
+                    for (const line of lines) {
+                        if (!line.trim()) continue;
+                        try {
+                            const msg = JSON.parse(line);
+                            handleProgress(msg, totalCases);
+                            if (msg.total) totalCases = msg.total;
+                            if (msg.step === 'done') { resultData = msg.data; resultData._totalAnalyzed = msg.totalAnalyzed; }
+                            if (msg.step === 'error') throw new Error(msg.message);
+                        } catch (e) {
+                            if (e.message !== msg?.message) console.error('Parse error:', e);
+                        }
+                    }
+                }
+
+                if (resultData) {
+                    showResults(resultData);
+                }
+            } catch (err) {
+                updateProgress('error', '❌ ' + err.message, 0);
+                setStatus('error', 'Error');
+            }
+
+            analyzeBtn.disabled = false;
+        }
+
+        function handleProgress(msg, totalCases) {
+            const steps = document.getElementById('progressSteps');
+
+            switch (msg.step) {
+                case 'search':
+                    updateProgress('search', msg.message, 5);
+                    addStep(steps, '🔍 Searching...', 'active');
+                    break;
+                case 'search_done':
+                    updateProgress('search_done', msg.message, 10);
+                    markStepDone(steps);
+                    addStep(steps, `✅ Found ${msg.total || '?'} matching cases`, 'done');
+                    break;
+                case 'fetch':
+                case 'fetch_progress':
+                    const pct = msg.progress ? 10 + (msg.progress / totalCases * 40) : 15;
+                    updateProgress('fetch', msg.message, pct);
+                    break;
+                case 'fetch_done':
+                    updateProgress('fetch_done', msg.message, 55);
+                    addStep(steps, '✅ All case texts read', 'done');
+                    break;
+                case 'summarize':
+                    updateProgress('summarize', msg.message, 60);
+                    addStep(steps, '🧠 Summarizing via AI...', 'active');
+                    break;
+                case 'summarize_done':
+                    updateProgress('summarize_done', msg.message, 80);
+                    markStepDone(steps);
+                    addStep(steps, '✅ Summaries complete', 'done');
+                    break;
+                case 'rank':
+                    updateProgress('rank', msg.message, 85);
+                    addStep(steps, '📊 Ranking by relevance...', 'active');
+                    break;
+                case 'done':
+                    updateProgress('done', '✅ Analysis complete!', 100);
+                    markStepDone(steps);
+                    addStep(steps, '✅ Rankings ready', 'done');
+                    break;
+            }
+        }
+
+        function updateProgress(step, message, pct) {
+            document.getElementById('progressStatus').textContent = message;
+            document.getElementById('progressBar').style.width = pct + '%';
+            if (step === 'done') {
+                document.getElementById('progressStatus').classList.remove('pulsing');
+            } else {
+                document.getElementById('progressStatus').classList.add('pulsing');
+            }
+        }
+
+        function addStep(container, text, cls) {
+            const el = document.createElement('div');
+            el.className = 'progress-step ' + cls;
+            el.textContent = text;
+            container.appendChild(el);
+        }
+
+        function markStepDone(container) {
+            const active = container.querySelector('.active');
+            if (active) { active.classList.remove('active'); active.classList.add('done'); }
+        }
+
+        // ── Show Results ──
+        function showResults(data) {
+            document.getElementById('progressSection').style.display = 'none';
+            document.getElementById('resultsSection').style.display = 'block';
+            document.getElementById('chatSection').style.display = 'block';
+            setStatus('ready', 'Analysis complete');
+
+            const rankings = data.rankings || [];
+            const top20 = rankings.slice(0, 20);
+
+            const totalAnalyzed = data._totalAnalyzed || rankings.length;
+            document.getElementById('resultsCount').textContent = `Showing top ${top20.length} of ${totalAnalyzed} analyzed`;
+
+            // Recommendation
+            if (data.recommendation) {
+                document.getElementById('recommendationBox').innerHTML = `
+                    <div class="recommendation-box">
+                        <div class="label">🎯 AI Recommendation</div>
+                        ${esc(data.recommendation)}
+                    </div>`;
+            }
+
+            // Ranking cards
+            const grid = document.getElementById('rankingGrid');
+            grid.innerHTML = top20.map((r, i) => {
+                const scoreClass = r.score >= 70 ? 'high' : r.score >= 40 ? 'mid' : 'low';
+                return `<div class="ranking-card">
+                    <div class="score-circle ${scoreClass}">${r.score}</div>
+                    <div class="ranking-info">
+                        <h3>${esc(r.heading || r.filename || 'Case ' + (i + 1))}</h3>
+                        <div class="ranking-meta">
+                            ${r.court ? `<span>🏛 ${esc(r.court)}</span>` : ''}
+                            ${r.date ? `<span>📅 ${r.date.split('T')[0]}</span>` : ''}
+                            <span>ID: ${esc(r.id || '')}</span>
+                        </div>
+                        <div class="ranking-reason">💡 ${esc(r.reason || '')}</div>
+                    </div>
+                    <div class="ranking-actions">
+                        <button class="btn btn-secondary btn-sm" onclick="previewCase('${r.id}', '${esc(r.heading || '')}')">
+                            <span class="material-icons-round" style="font-size:14px">visibility</span> Preview
+                        </button>
+                        <button class="btn btn-primary btn-sm" onclick="downloadOne(this, '${r.id}', '${esc(r.heading || '')}')">
+                            <span class="material-icons-round" style="font-size:14px">download</span> PDF
+                        </button>
+                    </div>
+                </div>`;
+            }).join('');
+
+            // Scroll to results
+            document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // ── Preview ──
+        async function previewCase(id, title) {
+            document.getElementById('previewTitle').textContent = title || 'Case Preview';
+            document.getElementById('previewContent').innerHTML = '<div class="spinner" style="margin:20px auto"></div>';
+            document.getElementById('previewModal').classList.add('open');
+            try {
+                const res = await fetch(API + `/api/case/${id}/preview`);
+                const data = await res.json();
+                document.getElementById('previewContent').innerHTML = data.html;
+            } catch (err) {
+                document.getElementById('previewContent').innerHTML = `<p style="color:var(--danger)">Error: ${err.message}</p>`;
+            }
+        }
+
+        // ── Download ──
+        async function downloadOne(btn, id, title) {
+            btn.disabled = true;
+            btn.innerHTML = '<div class="spinner"></div>';
+            try {
+                await fetch(API + '/api/download', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ caseId: id, title })
+                });
+                btn.innerHTML = '<span class="material-icons-round" style="font-size:14px">check</span> Done';
+                btn.style.borderColor = 'var(--success)';
+                btn.style.color = 'var(--success)';
+                btn.style.background = 'transparent';
+            } catch {
+                btn.innerHTML = 'Error';
+                btn.disabled = false;
+            }
+        }
+
+        // ── Follow-up chat ──
+        async function sendFollowup() {
+            const input = document.getElementById('chatInput');
+            const msg = input.value.trim();
+            if (!msg) return;
+
+            addChatMsg('user', msg);
+            input.value = '';
+            document.getElementById('sendBtn').disabled = true;
+
+            const loadingId = addChatMsg('ai', '<div class="spinner"></div>', true);
+
+            try {
+                const res = await fetch(API + '/api/chat/message', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: msg })
+                });
+                const data = await res.json();
+                removeMsg(loadingId);
+                addChatMsg('ai', data.data || data.error || 'No response');
+            } catch (err) {
+                removeMsg(loadingId);
+                addChatMsg('ai', '❌ ' + err.message);
+            }
+
+            document.getElementById('sendBtn').disabled = false;
+        }
+
+        let chatMsgId = 0;
+        function addChatMsg(role, content, isHtml = false) {
+            const id = 'chat-' + (++chatMsgId);
+            const container = document.getElementById('chatMessages');
+            const div = document.createElement('div');
+            div.className = `msg ${role}`;
+            div.id = id;
+            div.innerHTML = `
+                <div class="msg-label">${role === 'user' ? 'You' : 'Casebot'}</div>
+                <div class="msg-bubble">${isHtml ? content : esc(content).replace(/\n/g, '<br>')}</div>`;
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
+            return id;
+        }
+
+        function removeMsg(id) { document.getElementById(id)?.remove(); }
+
+        // ── Utils ──
+        function setStatus(type, text) {
+            document.getElementById('statusText').textContent = text;
+            const dot = document.getElementById('statusDot');
+            dot.style.background = type === 'ready' ? 'var(--success)' : type === 'loading' ? 'var(--warning)' : 'var(--danger)';
+        }
+
+        function esc(str) {
+            if (!str) return '';
+            const d = document.createElement('div');
+            d.textContent = str;
+            return d.innerHTML;
+        }
+
+        // ── New Analysis ──
+        function newAnalysis() {
+            document.getElementById('inputSection').style.display = 'block';
+            document.getElementById('progressSection').style.display = 'none';
+            document.getElementById('resultsSection').style.display = 'none';
+            document.getElementById('chatSection').style.display = 'none';
+            document.getElementById('progressSteps').innerHTML = '';
+            setStatus('ready', 'Ready');
+        }
+
+        // Enter key on keywords
+        document.getElementById('keywords').addEventListener('keydown', e => {
+            if (e.key === 'Enter') { e.preventDefault(); document.getElementById('context').focus(); }
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,28 @@
+{
+    "name": "centax-wrapper",
+    "version": "1.0.0",
+    "description": "API wrapper for Centax Online - search and download legal cases as PDFs",
+    "main": "index.js",
+    "scripts": {
+        "start": "node index.js",
+        "web": "node server.js",
+        "search": "node index.js search",
+        "download": "node index.js download"
+    },
+    "keywords": [
+        "centax",
+        "legal",
+        "cases",
+        "pdf",
+        "downloader"
+    ],
+    "license": "MIT",
+    "dependencies": {
+        "axios": "^1.7.0",
+        "cors": "^2.8.6",
+        "dotenv": "^16.4.0",
+        "express": "^5.2.1",
+        "node-machine-id": "^1.1.12",
+        "openai": "^6.22.0"
+    }
+}
