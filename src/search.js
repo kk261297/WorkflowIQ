@@ -21,7 +21,8 @@ async function searchCases(query, options = {}) {
         pageSize = 20,
         sortby = 'relevance',
         sortorder = '1',
-        filter = {}
+        filter = {},
+        isheadnoteToggle = false
     } = options;
 
     const payload = {
@@ -65,7 +66,7 @@ async function searchCases(query, options = {}) {
         isExcusSearch: false,
         subjectLabelArr: [],
         isAdvSearch: false,
-        isheadnoteToggle: false
+        isheadnoteToggle
     };
 
     return await authenticatedRequest(async (session) => {

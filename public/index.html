@@ -139,6 +139,103 @@
             margin-bottom: 16px;
         }
 
+        /* ─── Refinement Section ─── */
+        .refine-section {
+            display: none;
+            padding: 40px 0 32px;
+        }
+
+        .refine-section h2 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .refine-section>p {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
+
+        .refine-loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-secondary);
+        }
+
+        .question-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin-bottom: 16px;
+            animation: fadeInUp 0.3s ease;
+        }
+
+        .question-card .q-number {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .question-card .q-text {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 14px;
+            line-height: 1.4;
+        }
+
+        .q-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .q-option {
+            position: relative;
+        }
+
+        .q-option input[type="radio"],
+        .q-option input[type="checkbox"] {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .q-option label {
+            display: inline-block;
+            padding: 8px 16px;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--text-secondary);
+            background: var(--bg-input);
+        }
+
+        .q-option label:hover {
+            border-color: var(--accent);
+            color: var(--text-primary);
+        }
+
+        .q-option input[type="radio"]:checked+label,
+        .q-option input[type="checkbox"]:checked+label {
+            border-color: var(--accent);
+            background: rgba(79, 110, 247, 0.15);
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .refine-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
         .input-group label {
             display: block;
             font-size: 12px;
@@ -781,9 +878,34 @@
             </div>
 
             <div class="action-row">
-                <button class="btn btn-primary" id="analyzeBtn" onclick="runAnalysis()">
+                <button class="btn btn-primary" id="analyzeBtn" onclick="startRefineFlow()">
                     <span class="material-icons-round" style="font-size:18px">psychology</span>
                     Analyze Cases
+                </button>
+            </div>
+        </div>
+
+        <!-- ── Step 1.5: Refinement Questions ── -->
+        <div class="refine-section" id="refineSection">
+            <h2>🎯 Refine Your Search</h2>
+            <p>Based on your query, here are some questions to help narrow down the most relevant cases.</p>
+            <div id="refineLoading" class="refine-loading">
+                <div class="spinner" style="margin: 0 auto 12px"></div>
+                <div>AI is generating smart filter questions...</div>
+            </div>
+            <div id="refineQuestions"></div>
+            <div class="refine-actions" id="refineActions" style="display:none">
+                <button class="btn btn-primary" onclick="submitRefinedSearch()">
+                    <span class="material-icons-round" style="font-size:18px">search</span>
+                    Search with Filters
+                </button>
+                <button class="btn btn-secondary" onclick="submitRefinedSearch(true)">
+                    <span class="material-icons-round" style="font-size:18px">skip_next</span>
+                    Skip &amp; Search All
+                </button>
+                <button class="btn btn-secondary" onclick="newAnalysis()">
+                    <span class="material-icons-round" style="font-size:18px">arrow_back</span>
+                    Back
                 </button>
             </div>
         </div>
@@ -842,36 +964,196 @@
     <script>
         const API = '';
 
-        // ── Run Analysis ──
+        const FILTER_CONFIG = [
+            {
+                id: 'module',
+                label: 'Which tax module does your case relate to?',
+                type: 'checkbox',
+                options: [
+                    { label: 'GST', value: 'GST' },
+                    { label: 'Customs', value: 'Customs' },
+                    { label: 'Excise & Service Tax', value: 'Excise & Service Tax' },
+                    { label: 'Foreign Trade Policy', value: 'Foreign Trade Policy' }
+                ]
+            },
+            {
+                id: 'docType',
+                label: 'What type of document are you looking for?',
+                type: 'checkbox',
+                options: [
+                    { label: 'Case Laws', value: 'Case Laws' },
+                    { label: 'Notifications', value: 'Notifications' },
+                    { label: 'Acts', value: 'Acts' },
+                    { label: 'Rules', value: 'Rules' }
+                ]
+            },
+            {
+                id: 'court',
+                label: 'Which court level are you interested in?',
+                type: 'checkbox',
+                options: [
+                    { label: 'Supreme Court', value: 'Supreme Court' },
+                    { label: 'High Court', value: 'High Court' },
+                    { label: 'Tribunal', value: 'Tribunal' },
+                    { label: 'Advance Ruling', value: 'Advance Ruling' }
+                ]
+            },
+            {
+                id: 'act',
+                label: 'Specific Act?',
+                type: 'checkbox',
+                options: [
+                    { label: 'CGST Act 2017', value: 'Central Goods And Services Tax Act, 2017' },
+                    { label: 'IGST Act 2017', value: 'Integrated Goods and Services Tax Act, 2017' },
+                    { label: 'Customs Act 1962', value: 'Customs Act, 1962' },
+                    { label: 'Central Excise Act 1944', value: 'Central Excise Act, 1944' },
+                    { label: 'Finance Act 1994', value: 'Finance Act, 1994' },
+                    { label: 'UP GST Act 2017', value: 'Uttar Pradesh Goods And Services Tax Act, 2017' }
+                ]
+            },
+            {
+                id: 'yearRange',
+                label: 'What time period are you focusing on?',
+                type: 'radio',
+                options: [
+                    { label: 'Last 1 year', value: 'last_1_year' },
+                    { label: 'Last 3 years', value: 'last_3_years' },
+                    { label: 'Last 5 years', value: 'last_5_years' },
+                    { label: 'All time', value: 'all_time' }
+                ]
+            },
+            {
+                id: 'headnoteOnly',
+                label: 'Search in headnotes only?',
+                type: 'radio',
+                options: [
+                    { label: 'Yes', value: 'yes' },
+                    { label: 'No', value: 'no' }
+                ]
+            }
+        ];
+
+        let currentKeywords = '';
+        let currentContext = '';
+        let currentCount = 50;
+        let currentFilters = {};
+
+        // ── Step 1: Refine Flow ──
+        async function startRefineFlow() {
+            currentKeywords = document.getElementById('keywords').value.trim();
+            currentContext = document.getElementById('context').value.trim();
+            currentCount = parseInt(document.getElementById('caseCount').value);
+
+            if (!currentKeywords) { alert('Please enter search keywords'); return; }
+            if (!currentContext) { alert('Please describe your case / context'); return; }
+
+            // Switch to refinement view
+            document.getElementById('inputSection').style.display = 'none';
+            document.getElementById('refineSection').style.display = 'block';
+            document.getElementById('refineLoading').style.display = 'block';
+            document.getElementById('refineLoading').textContent = '🤖 AI is analyzing your query to pre-select the best filters...';
+            document.getElementById('refineActions').style.display = 'flex';
+
+            // Render all filters immediately without suggestions
+            renderAllFilters({});
+
+            try {
+                const res = await fetch(API + '/api/refine', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ keywords: currentKeywords, context: currentContext })
+                });
+                const data = await res.json();
+
+                if (data.suggested) {
+                    // Update UI to check suggested options
+                    renderAllFilters(data.suggested);
+                }
+            } catch (err) {
+                console.error('Refine error:', err);
+                // On error, just let user pick manually
+            } finally {
+                document.getElementById('refineLoading').style.display = 'none';
+            }
+        }
+
+        function renderAllFilters(suggested = {}) {
+            const container = document.getElementById('refineQuestions');
+            container.innerHTML = FILTER_CONFIG.map((filter) => {
+                const suggestedValues = suggested[filter.id] || [];
+
+                // For radios, if no suggestion default to the last option (All time / No)
+                let defaults = [];
+                if (filter.type === 'radio' && suggestedValues.length === 0) {
+                    defaults = [filter.options[filter.options.length - 1].value];
+                }
+                const activeValues = suggestedValues.length > 0 ? suggestedValues : defaults;
+
+                const optionsHtml = filter.options.map((opt, j) => {
+                    const isChecked = activeValues.includes(opt.value) ? 'checked' : '';
+                    return `<div class="q-option">
+                        <input type="${filter.type}" name="q_${filter.id}" id="q_${filter.id}_${j}" value="${esc(opt.value)}" ${isChecked}>
+                        <label for="q_${filter.id}_${j}">${esc(opt.label)}</label>
+                    </div>`;
+                }).join('');
+
+                return `<div class="question-card">
+                    <div class="q-text">${esc(filter.label)}</div>
+                    <div class="q-options">${optionsHtml}</div>
+                </div>`;
+            }).join('');
+
+            setStatus('ready', 'Review filters');
+        }
+
+        function submitRefinedSearch(skipFilters = false) {
+            if (!skipFilters) {
+                // Collect selected inputs
+                currentFilters = {};
+                document.querySelectorAll('.question-card').forEach(card => {
+                    const inputs = card.querySelectorAll('input:checked');
+                    inputs.forEach(r => {
+                        const filterId = r.name.replace('q_', '');
+                        if (!currentFilters[filterId]) currentFilters[filterId] = [];
+                        currentFilters[filterId].push(r.value);
+                    });
+                });
+            } else {
+                currentFilters = {};
+            }
+
+            // Hide refinement, show progress
+            document.getElementById('refineSection').style.display = 'none';
+            runAnalysis();
+        }
+
+        // ── Step 2: Run Analysis ──
         async function runAnalysis() {
-            const keywords = document.getElementById('keywords').value.trim();
-            const context = document.getElementById('context').value.trim();
-            const count = parseInt(document.getElementById('caseCount').value);
-
-            if (!keywords) { alert('Please enter search keywords'); return; }
-            if (!context) { alert('Please describe your case / context'); return; }
-
             // Switch to progress view
             document.getElementById('inputSection').style.display = 'none';
+            document.getElementById('refineSection').style.display = 'none';
             document.getElementById('progressSection').style.display = 'block';
             document.getElementById('resultsSection').style.display = 'none';
             document.getElementById('chatSection').style.display = 'none';
+            document.getElementById('progressSteps').innerHTML = '';
             setStatus('loading', 'Analyzing...');
-
-            const analyzeBtn = document.getElementById('analyzeBtn');
-            analyzeBtn.disabled = true;
 
             try {
                 const response = await fetch(API + '/api/analyze', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ keywords, context, count })
+                    body: JSON.stringify({
+                        keywords: currentKeywords,
+                        context: currentContext,
+                        count: currentCount,
+                        filters: currentFilters
+                    })
                 });
 
                 const reader = response.body.getReader();
                 const decoder = new TextDecoder();
                 let buffer = '';
-                let totalCases = count;
+                let totalCases = currentCount;
                 let resultData = null;
 
                 while (true) {
@@ -884,14 +1166,24 @@
 
                     for (const line of lines) {
                         if (!line.trim()) continue;
+                        let msg = null;
                         try {
-                            const msg = JSON.parse(line);
-                            handleProgress(msg, totalCases);
-                            if (msg.total) totalCases = msg.total;
-                            if (msg.step === 'done') { resultData = msg.data; resultData._totalAnalyzed = msg.totalAnalyzed; }
-                            if (msg.step === 'error') throw new Error(msg.message);
+                            msg = JSON.parse(line);
                         } catch (e) {
-                            if (e.message !== msg?.message) console.error('Parse error:', e);
+                            console.error('Parse error:', e);
+                            continue;
+                        }
+
+                        if (msg) {
+                            handleProgress(msg, totalCases);
+                            if (msg.total != null) totalCases = msg.total;
+                            if (msg.step === 'done') {
+                                resultData = msg.data;
+                                resultData._totalAnalyzed = msg.totalAnalyzed;
+                            }
+                            if (msg.step === 'error') {
+                                throw new Error(msg.message);
+                            }
                         }
                     }
                 }
@@ -903,8 +1195,6 @@
                 updateProgress('error', '❌ ' + err.message, 0);
                 setStatus('error', 'Error');
             }
-
-            analyzeBtn.disabled = false;
         }
 
         function handleProgress(msg, totalCases) {
@@ -918,7 +1208,7 @@
                 case 'search_done':
                     updateProgress('search_done', msg.message, 10);
                     markStepDone(steps);
-                    addStep(steps, `✅ Analyzing ${msg.total || '?'} cases`, 'done');
+                    addStep(steps, `✅ Analyzing ${msg.total != null ? msg.total : '?'} cases`, 'done');
                     break;
                 case 'fetch':
                 case 'fetch_progress':
@@ -1121,6 +1411,7 @@
         // ── New Analysis ──
         function newAnalysis() {
             document.getElementById('inputSection').style.display = 'block';
+            document.getElementById('refineSection').style.display = 'none';
             document.getElementById('progressSection').style.display = 'none';
             document.getElementById('resultsSection').style.display = 'none';
             document.getElementById('chatSection').style.display = 'none';

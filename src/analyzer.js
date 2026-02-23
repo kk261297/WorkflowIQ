@@ -197,4 +197,66 @@ ${summaryBlock}`
     return response.choices[0].message.content;
 }
 
-module.exports = { summarizeCase, summarizeAll, rankByRelevance, chat };
+/**
+ * Get smart filter suggestions using LLM
+ *
+ * @param {string} keywords - Search keywords
+ * @param {string} context - User's case context
+ * @returns {Object} map of filter IDs to arrays of suggested values
+ */
+async function getFilterSuggestions(keywords, context) {
+    const response = await openai.chat.completions.create({
+        model: 'gpt-4o-mini',
+        messages: [
+            {
+                role: 'system',
+                content: `You are a legal research assistant for Indian tax law. The user wants to search for relevant cases.
+Based on their keywords and case context, suggest the best filters to apply to narrow down the search.
+
+AVAILABLE FILTERS & VALUES:
+- "module": ["GST", "Excise & Service Tax", "Customs", "Foreign Trade Policy"]
+- "docType": ["Case Laws", "Notifications", "Acts", "Rules"]
+- "court": ["Supreme Court", "High Court", "Tribunal", "Advance Ruling"]
+- "act": ["Central Goods And Services Tax Act, 2017", "Integrated Goods and Services Tax Act, 2017", "Customs Act, 1962", "Central Excise Act, 1944", "Finance Act, 1994", "Uttar Pradesh Goods And Services Tax Act, 2017"]
+- "yearRange": ["last_1_year", "last_3_years", "last_5_years", "all_time"]
+- "headnoteOnly": ["yes", "no"]
+
+RULES:
+- Only select filter options that are strongly implied by the user's query. Stop the user from getting 0 results by being too restrictive. Less is more.
+- Return a JSON object with a key "suggested_filters" containing the results.
+- Keys must match the filter IDs above.
+- Values MUST be ARRAYS of strings from the available values list above.
+- If no specific filter applies for a category, omit it or use an empty array [].
+- "yearRange" and "headnoteOnly" should contain at most one value.
+- "docType" should ideally just be ["Case Laws"] unless they specify otherwise.
+
+EXPECTED JSON FORMAT (Raw JSON only):
+{
+  "suggested_filters": {
+    "module": ["GST"],
+    "docType": ["Case Laws"],
+    "court": ["High Court", "Supreme Court"]
+  }
+}`
+            },
+            {
+                role: 'user',
+                content: `Keywords: ${keywords}\nCase context: ${context}`
+            }
+        ],
+        temperature: 0.1,
+        max_tokens: 500
+    });
+
+    const content = response.choices[0].message.content;
+    try {
+        const jsonStr = content.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+        const parsed = JSON.parse(jsonStr);
+        return parsed.suggested_filters || {};
+    } catch {
+        console.error('Failed to parse filter suggestions:', content);
+        return {};
+    }
+}
+
+module.exports = { summarizeCase, summarizeAll, rankByRelevance, chat, getFilterSuggestions };
