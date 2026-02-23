@@ -1,5 +1,5 @@
 {
-    "name": "centax-wrapper",
+    "name": "workflowiq",
     "version": "1.0.0",
     "description": "API wrapper for Centax Online - search and download legal cases as PDFs",
     "main": "index.js",
