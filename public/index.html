@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AutomateIQ Casebot</title>
+    <title>WorkflowIQ Casebot</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
@@ -710,7 +710,7 @@
         <div class="brand-icon">⚡</div>
         <div>
             <div class="brand">
-                <h1>AutomateIQ Casebot</h1>
+                <h1>WorkflowIQ Casebot</h1>
             </div>
             <div class="brand-sub">AI-Powered Legal Research</div>
         </div>
@@ -737,9 +737,12 @@
                 <div class="input-group">
                     <label>Number of Cases to Analyze</label>
                     <select id="caseCount">
-                        <option value="30">30 cases (fast, ~2 min)</option>
-                        <option value="50">50 cases (~3 min)</option>
-                        <option value="100" selected>100 cases (thorough, ~6 min)</option>
+                        <option value="10">10 cases (~30 sec)</option>
+                        <option value="20">20 cases (~1 min)</option>
+                        <option value="30">30 cases (~2 min)</option>
+                        <option value="50" selected>50 cases (~3 min)</option>
+                        <option value="75">75 cases (~4 min)</option>
+                        <option value="100">100 cases (~6 min)</option>
                     </select>
                 </div>
                 <div class="input-group context-area">
@@ -915,7 +918,7 @@
                 case 'search_done':
                     updateProgress('search_done', msg.message, 10);
                     markStepDone(steps);
-                    addStep(steps, `✅ Found ${msg.total || '?'} matching cases`, 'done');
+                    addStep(steps, `✅ Analyzing ${msg.total || '?'} cases`, 'done');
                     break;
                 case 'fetch':
                 case 'fetch_progress':

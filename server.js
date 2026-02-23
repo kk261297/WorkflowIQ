@@ -97,7 +97,7 @@ app.post('/api/analyze', async (req, res) => {
         }
 
         cases = cases.slice(0, count);
-        send({ step: 'search_done', message: `Found ${totalCount} total. Processing top ${cases.length}.`, total: cases.length });
+        send({ step: 'search_done', message: `Analyzing top ${cases.length} cases.`, total: cases.length });
 
         if (cases.length === 0) {
             send({ step: 'error', message: 'No results found. Try different keywords.' });
@@ -224,5 +224,5 @@ app.get('/', (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`\n🚀 AutomateIQ Casebot running at http://localhost:${PORT}\n`);
+    console.log(`\n🚀 WorkflowIQ Casebot running at http://localhost:${PORT}\n`);
 });
