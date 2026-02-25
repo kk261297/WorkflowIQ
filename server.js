@@ -220,6 +220,21 @@ app.post('/api/analyze', async (req, res) => {
         }
 
         cases = cases.slice(0, count);
+
+        // Deduplicate cases by ID (API can return duplicates across pages)
+        const seenIds = new Set();
+        const uniqueCases = [];
+        for (const c of cases) {
+            if (!seenIds.has(c.id)) {
+                seenIds.add(c.id);
+                uniqueCases.push(c);
+            }
+        }
+        if (uniqueCases.length < cases.length) {
+            console.log(`⚠️ Removed ${cases.length - uniqueCases.length} duplicate case(s)`);
+        }
+        cases = uniqueCases;
+
         send({ step: 'search_done', message: `Analyzing top ${cases.length} cases.`, total: cases.length });
 
         if (cases.length === 0) {
@@ -292,11 +307,17 @@ app.post('/api/analyze', async (req, res) => {
             }
         }
 
-        send({ step: 'fetch_done', message: `Read ${caseTexts.length} case texts. Summarizing...` });
+        const skippedCount = cases.length - caseTexts.length;
+        if (skippedCount > 0) {
+            send({ step: 'fetch_done', message: `Read ${caseTexts.length} case texts (${skippedCount} case(s) could not be read). Summarizing...` });
+            console.log(`⚠️ ${skippedCount} case(s) could not be fetched`);
+        } else {
+            send({ step: 'fetch_done', message: `Read ${caseTexts.length} case texts. Summarizing...` });
+        }
 
         // Step 3: Summarize all cases via OpenAI (with caching)
         send({ step: 'summarize', message: `Summarizing ${caseTexts.length} cases via AI (cached summaries skip instantly)...` });
-        const allSummaries = await summarizeAll(caseTexts);
+        const allSummaries = await summarizeAll(caseTexts, keywords, context);
 
         // Filter to only include summaries for THIS search's cases
         const currentIds = new Set(caseTexts.map(c => c.id));

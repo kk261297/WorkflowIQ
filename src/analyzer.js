@@ -10,7 +10,7 @@ const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 /**
  * Summarize a single case using OpenAI
  */
-async function summarizeCase(text, filename) {
+async function summarizeCase(text, filename, keywords = '', context = '') {
     // Truncate very long texts to avoid token limits (keep first ~12K chars)
     const truncated = text.length > 12000 ? text.substring(0, 12000) + '\n...[truncated]' : text;
 
@@ -19,23 +19,34 @@ async function summarizeCase(text, filename) {
         messages: [
             {
                 role: 'system',
-                content: `You are a legal analyst. Summarize the following Indian legal case in exactly 150-200 words. Include:
-1. Case name and citation
-2. Court and date
-3. Key legal issue(s)
-4. Facts in brief
-5. Decision/Held
-6. Key legal principle established
-
-Be precise and factual. Focus on the legal substance.`
+                content: `You are a senior Indian legal analyst specializing in tax and commercial litigation. You must remain neutral, objective, and precise. Do not assume facts not present in the judgment. Do not exaggerate the ratio. Focus strictly on the legal substance.`
             },
             {
                 role: 'user',
-                content: truncated
+                content: `Input Provided:
+- Keywords: ${keywords}
+- Research Narrative / Context: ${context}
+- Case Text: ${truncated}
+
+Task:
+- Carefully read the full judgment text.
+- Identify whether the case meaningfully relates to the keywords and research narrative.
+- If relevant, summarize the case in EXACTLY 150–200 words in the following format:
+
+Required Output Format:
+- Case Name and Citation
+- Court and Date
+- Key Legal Issue(s)
+- Facts in Brief
+- Decision / Held
+- Key Legal Principle Established
+
+Be precise and factual. Focus on ratio decidendi, not obiter. Avoid commentary or personal opinions. If the case is not materially relevant, state:
+"After review, this judgment is not materially relevant to the provided research narrative."`
             }
         ],
         temperature: 0.2,
-        max_tokens: 400
+        max_tokens: 500
     });
 
     return response.choices[0].message.content;
@@ -64,9 +75,11 @@ function saveSummaries(summaries) {
  * Summarize all cases, using cache where available
  *
  * @param {Array<{filename, id, text}>} cases - Extracted PDF texts
+ * @param {string} keywords - Search keywords for relevance filtering
+ * @param {string} context - User's research narrative/context
  * @returns {Object} Map of id -> {filename, summary}
  */
-async function summarizeAll(cases) {
+async function summarizeAll(cases, keywords = '', context = '') {
     const cached = loadSummaries();
     let newCount = 0;
 
@@ -80,7 +93,7 @@ async function summarizeAll(cases) {
 
         try {
             console.log(`  🔄 Summarizing ${c.filename}...`);
-            const summary = await summarizeCase(c.text, c.filename);
+            const summary = await summarizeCase(c.text, c.filename, keywords, context);
             cached[c.id] = { filename: c.filename, summary };
             newCount++;
 
@@ -119,11 +132,26 @@ async function rankByRelevance(summaries, userContext) {
         messages: [
             {
                 role: 'system',
-                content: `You are an expert Indian legal research assistant. The user will describe their legal case or situation. You have summaries of multiple legal cases. Your task is to:
+                content: `You are acting as an impartial constitutional court evaluating whether a precedent meaningfully supports a legal argument. You must be neutral, analytical, and independent. Do not favour the narrative. Assess legal alignment objectively.
 
-1. Analyze which cases are most relevant to the user's situation
-2. Assign a relevancy score (0-100) to each case
-3. Explain WHY each case is relevant or not relevant
+You will receive a Research Narrative and multiple Case Summaries. For EACH case, perform the following analysis:
+- Compare the legal issues in the case summary with the research narrative.
+- Identify:
+  - Legal issue overlap
+  - Factual similarity
+  - Statutory similarity
+  - Contextual similarity (tax type, procedural stage, etc.)
+- Determine whether the case:
+  - Directly supports
+  - Partially supports
+  - Is distinguishable
+  - Is adverse
+- Assign a Relevancy Score from 0 to 100 based on:
+  - 90–100: Direct precedent, highly similar facts & issue
+  - 70–89: Strong persuasive support
+  - 50–69: Moderate relevance, distinguishable facts
+  - 30–49: Weak support
+  - 0–29: Not relevant or adverse
 
 Respond in this exact JSON format (no markdown, just raw JSON):
 {
@@ -133,17 +161,18 @@ Respond in this exact JSON format (no markdown, just raw JSON):
       "id": "case_id",
       "filename": "filename.pdf",
       "score": 85,
-      "reason": "Brief explanation of relevance"
+      "category": "Direct / Strong / Moderate / Weak / Not Relevant / Adverse",
+      "reason": "Brief judicial analysis: issue alignment, factual alignment, statutory alignment, distinguishing factors, and why it supports or does not support the narrative"
     }
   ],
   "recommendation": "Brief overall recommendation for the user's case"
 }
 
-Sort rankings by score descending (most relevant first). Return ONLY the top 20 most relevant cases. Skip cases with score below 10.`
+Sort rankings by score descending (most relevant first). Return ALL cases. Do not inflate scores.`
             },
             {
                 role: 'user',
-                content: `## My Legal Situation\n${userContext}\n\n## Available Cases\n${summaryBlock}`
+                content: `## Research Narrative\n${userContext}\n\n## Case Summaries\n${summaryBlock}`
             }
         ],
         temperature: 0.3,
