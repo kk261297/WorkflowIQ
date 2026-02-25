@@ -271,9 +271,7 @@ AVAILABLE FILTERS & VALUES:
 - "module": ["GST", "Excise & Service Tax", "Customs", "Foreign Trade Policy"]
 - "docType": ["Case Laws", "Notifications", "Acts", "Rules"]
 - "court": ["Supreme Court", "High Court", "Tribunal", "Advance Ruling"]
-- "act": ["Central Goods And Services Tax Act, 2017", "Integrated Goods and Services Tax Act, 2017", "Customs Act, 1962", "Central Excise Act, 1944", "Finance Act, 1994", "Uttar Pradesh Goods And Services Tax Act, 2017"]
-- "yearRange": ["last_1_year", "last_3_years", "last_5_years", "all_time"]
-- "headnoteOnly": ["yes", "no"]
+- "yearRange": ["last_1_year", "last_3_years", "last_5_years"]
 
 RULES:
 - Only select filter options that are strongly implied by the user's query. Stop the user from getting 0 results by being too restrictive. Less is more.
@@ -281,7 +279,7 @@ RULES:
 - Keys must match the filter IDs above.
 - Values MUST be ARRAYS of strings from the available values list above.
 - If no specific filter applies for a category, omit it or use an empty array [].
-- "yearRange" and "headnoteOnly" should contain at most one value.
+- "yearRange" should contain at most one value.
 - "docType" should ideally just be ["Case Laws"] unless they specify otherwise.
 
 EXPECTED JSON FORMAT (Raw JSON only):

@@ -1032,36 +1032,13 @@
                 ]
             },
             {
-                id: 'act',
-                label: 'Specific Act?',
-                type: 'checkbox',
-                options: [
-                    { label: 'CGST Act 2017', value: 'Central Goods And Services Tax Act, 2017' },
-                    { label: 'IGST Act 2017', value: 'Integrated Goods and Services Tax Act, 2017' },
-                    { label: 'Customs Act 1962', value: 'Customs Act, 1962' },
-                    { label: 'Central Excise Act 1944', value: 'Central Excise Act, 1944' },
-                    { label: 'Finance Act 1994', value: 'Finance Act, 1994' },
-                    { label: 'UP GST Act 2017', value: 'Uttar Pradesh Goods And Services Tax Act, 2017' }
-                ]
-            },
-            {
                 id: 'yearRange',
                 label: 'What time period are you focusing on?',
-                type: 'radio',
+                type: 'checkbox',
                 options: [
                     { label: 'Last 1 year', value: 'last_1_year' },
                     { label: 'Last 3 years', value: 'last_3_years' },
-                    { label: 'Last 5 years', value: 'last_5_years' },
-                    { label: 'All time', value: 'all_time' }
-                ]
-            },
-            {
-                id: 'headnoteOnly',
-                label: 'Search in headnotes only?',
-                type: 'radio',
-                options: [
-                    { label: 'Yes', value: 'yes' },
-                    { label: 'No', value: 'no' }
+                    { label: 'Last 5 years', value: 'last_5_years' }
                 ]
             }
         ];
@@ -1114,18 +1091,12 @@
             const container = document.getElementById('refineQuestions');
             container.innerHTML = FILTER_CONFIG.map((filter) => {
                 const suggestedValues = suggested[filter.id] || [];
-
-                // For radios, if no suggestion default to the last option (All time / No)
-                let defaults = [];
-                if (filter.type === 'radio' && suggestedValues.length === 0) {
-                    defaults = [filter.options[filter.options.length - 1].value];
-                }
-                const activeValues = suggestedValues.length > 0 ? suggestedValues : defaults;
+                const activeValues = suggestedValues;
 
                 const optionsHtml = filter.options.map((opt, j) => {
                     const isChecked = activeValues.includes(opt.value) ? 'checked' : '';
                     return `<div class="q-option">
-                        <input type="${filter.type}" name="q_${filter.id}" id="q_${filter.id}_${j}" value="${esc(opt.value)}" ${isChecked}>
+                        <input type="checkbox" name="q_${filter.id}" id="q_${filter.id}_${j}" value="${opt.value}" ${isChecked}>
                         <label for="q_${filter.id}_${j}">${esc(opt.label)}</label>
                     </div>`;
                 }).join('');
