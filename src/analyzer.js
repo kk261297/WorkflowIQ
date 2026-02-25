@@ -271,7 +271,7 @@ AVAILABLE FILTERS & VALUES:
 - "module": ["GST", "Excise & Service Tax", "Customs", "Foreign Trade Policy"]
 - "docType": ["Case Laws", "Notifications", "Acts", "Rules"]
 - "court": ["Supreme Court", "High Court", "Tribunal", "Advance Ruling"]
-- "yearRange": ["last_1_year", "last_3_years", "last_5_years"]
+- "yearList": ["2026", "2025", "2024", "2023", "2022", "2021", "2020", "2019", "2018", "2017", "2016", "2015"]
 
 RULES:
 - Only select filter options that are strongly implied by the user's query. Stop the user from getting 0 results by being too restrictive. Less is more.
@@ -279,7 +279,6 @@ RULES:
 - Keys must match the filter IDs above.
 - Values MUST be ARRAYS of strings from the available values list above.
 - If no specific filter applies for a category, omit it or use an empty array [].
-- "yearRange" should contain at most one value.
 - "docType" should ideally just be ["Case Laws"] unless they specify otherwise.
 
 EXPECTED JSON FORMAT (Raw JSON only):

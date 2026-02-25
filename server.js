@@ -152,17 +152,10 @@ app.post('/api/analyze', async (req, res) => {
             apiFilter.actList = [ACT_IDS[filters.act]];
         }
 
-        // yearRange comes as array or string
-        let yearRangeVal = Array.isArray(filters.yearRange) ? filters.yearRange[0] : filters.yearRange;
-        if (yearRangeVal && yearRangeVal !== 'all_time') {
-            const now = new Date();
-            const yearsBack = yearRangeVal === 'last_1_year' ? 1 : yearRangeVal === 'last_3_years' ? 3 : 5;
-            const fromDate = new Date(now.getFullYear() - yearsBack, now.getMonth(), now.getDate());
-            apiFilter.decisionDateFrom = fromDate.toISOString().split('T')[0];
-            apiFilter.decisionDateTo = now.toISOString().split('T')[0];
+        // yearList comes as array of year strings like ["2025", "2024"]
+        if (filters.yearList && Array.isArray(filters.yearList) && filters.yearList.length > 0) {
+            apiFilter.yearList = filters.yearList;
         }
-        let headnoteOnlyVal = Array.isArray(filters.headnoteOnly) ? filters.headnoteOnly[0] : filters.headnoteOnly;
-        const isHeadnoteOnly = headnoteOnlyVal === 'yes';
 
         const sortby = filters.sort || 'relevance';
 
@@ -177,15 +170,15 @@ app.post('/api/analyze', async (req, res) => {
         const send = (data) => res.write(JSON.stringify(data) + '\n');
 
         // Step 1: Search (Centax API caps at 20/page, so paginate)
-        const hasFilters = Object.keys(apiFilter).length > 0 || isHeadnoteOnly;
-        const appliedFilters = hasFilters ? ` with ${Object.keys(apiFilter).length + (isHeadnoteOnly ? 1 : 0)} filters` : '';
+        const hasFilters = Object.keys(apiFilter).length > 0;
+        const appliedFilters = hasFilters ? ` with ${Object.keys(apiFilter).length} filters` : '';
         send({ step: 'search', message: `Searching for "${keywords}"${appliedFilters}...` });
         const PAGE_SIZE = 20;
         let cases = [];
         let totalCount = 0;
 
         // Helper to run paginated search
-        async function doSearch(filterObj, headnoteToggle) {
+        async function doSearch(filterObj) {
             const searchCases_ = [];
             const totalPgs = Math.ceil(count / PAGE_SIZE);
             let tc = 0;
@@ -194,8 +187,7 @@ app.post('/api/analyze', async (req, res) => {
                     page: p,
                     pageSize: PAGE_SIZE,
                     sortby,
-                    filter: filterObj,
-                    isheadnoteToggle: headnoteToggle
+                    filter: filterObj
                 });
                 tc = searchResult.totalCount;
                 searchCases_.push(...searchResult.results);
@@ -207,14 +199,14 @@ app.post('/api/analyze', async (req, res) => {
         }
 
         // Run filtered search
-        let searchData = await doSearch(apiFilter, isHeadnoteOnly);
+        let searchData = await doSearch(apiFilter);
         cases = searchData.results;
         totalCount = searchData.totalCount;
 
         // If filtered search returns 0 results, auto-retry without filters
         if (cases.length === 0 && hasFilters) {
             send({ step: 'search', message: '⚠️ Filters too restrictive — retrying without filters...' });
-            searchData = await doSearch({}, false);
+            searchData = await doSearch({});
             cases = searchData.results;
             totalCount = searchData.totalCount;
         }
@@ -235,7 +227,7 @@ app.post('/api/analyze', async (req, res) => {
         }
         cases = uniqueCases;
 
-        send({ step: 'search_done', message: `Analyzing top ${cases.length} cases.`, total: cases.length });
+        send({ step: 'search_done', message: `Found ${totalCount} total results. Analyzing top ${cases.length}.`, total: cases.length, totalCount: totalCount });
 
         if (cases.length === 0) {
             send({ step: 'error', message: 'No results found. Try different keywords.' });
