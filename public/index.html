@@ -1325,7 +1325,7 @@
                     </div>
                     ${r.summary ? `<div class="case-summary-content" id="summary_${i}">
                         <div class="summary-label">📋 AI Case Summary</div>
-                        ${esc(r.summary)}
+                        ${formatSummary(r.summary)}
                     </div>` : ''}
                 </div>`;
             }).join('');
@@ -1431,6 +1431,19 @@
             const d = document.createElement('div');
             d.textContent = str;
             return d.innerHTML;
+        }
+
+        function formatSummary(str) {
+            if (!str) return '';
+            // Escape HTML first
+            let html = esc(str);
+            // Convert **bold** to <strong>
+            html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+            // Convert - bullet points at start of lines
+            html = html.replace(/^- /gm, '• ');
+            // Convert newlines to <br>
+            html = html.replace(/\n/g, '<br>');
+            return html;
         }
 
         // ── New Analysis ──

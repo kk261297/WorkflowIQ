@@ -161,7 +161,6 @@ app.post('/api/analyze', async (req, res) => {
 
         console.log('🔍 Filters received:', JSON.stringify(filters));
         console.log('🔍 API filter mapped:', JSON.stringify(apiFilter));
-        console.log('🔍 Headnote only:', isHeadnoteOnly);
 
         // Stream updates via SSE-like newline-delimited JSON
         res.setHeader('Content-Type', 'application/x-ndjson');
