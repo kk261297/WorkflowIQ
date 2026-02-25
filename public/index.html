@@ -564,6 +564,39 @@
             min-width: 90px;
         }
 
+        .case-summary-toggle {
+            width: 100%;
+            grid-column: 1 / -1;
+        }
+
+        .case-summary-content {
+            display: none;
+            grid-column: 1 / -1;
+            background: rgba(79, 110, 247, 0.05);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 16px;
+            margin-top: 8px;
+            font-size: 13px;
+            line-height: 1.7;
+            color: var(--text-secondary);
+            white-space: pre-wrap;
+            animation: fadeInUp 0.2s ease;
+        }
+
+        .case-summary-content.open {
+            display: block;
+        }
+
+        .case-summary-content .summary-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
         /* ─── Chat Follow-up ─── */
         .chat-section {
             display: none;
@@ -1306,7 +1339,14 @@
                         <button class="btn btn-primary btn-sm" onclick="downloadOne(this, '${r.id}', '${esc(r.heading || '')}')">
                             <span class="material-icons-round" style="font-size:14px">download</span> PDF
                         </button>
+                        ${r.summary ? `<button class="btn btn-secondary btn-sm" onclick="toggleSummary('summary_${i}')">
+                            <span class="material-icons-round" style="font-size:14px">description</span> Summary
+                        </button>` : ''}
                     </div>
+                    ${r.summary ? `<div class="case-summary-content" id="summary_${i}">
+                        <div class="summary-label">📋 AI Case Summary</div>
+                        ${esc(r.summary)}
+                    </div>` : ''}
                 </div>`;
             }).join('');
 
@@ -1315,6 +1355,11 @@
         }
 
         // ── Preview ──
+        function toggleSummary(id) {
+            const el = document.getElementById(id);
+            if (el) el.classList.toggle('open');
+        }
+
         async function previewCase(id, title) {
             document.getElementById('previewTitle').textContent = title || 'Case Preview';
             document.getElementById('previewContent').innerHTML = '<div class="spinner" style="margin:20px auto"></div>';

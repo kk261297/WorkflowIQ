@@ -339,11 +339,13 @@ app.post('/api/analyze', async (req, res) => {
         if (rankResult.rankings) {
             rankResult.rankings = rankResult.rankings.map(r => {
                 const caseData = caseTexts.find(c => c.id === r.id) || cases.find(c => c.id === r.id);
+                const summaryData = currentSummaries[r.id];
                 return {
                     ...r,
                     heading: caseData?.heading || r.filename,
                     court: caseData?.court || '',
                     date: caseData?.date || '',
+                    summary: summaryData?.summary || '',
                 };
             });
         }
