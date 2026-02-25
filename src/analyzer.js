@@ -81,33 +81,58 @@ function saveSummaries(summaries) {
  */
 async function summarizeAll(cases, keywords = '', context = '') {
     const cached = loadSummaries();
-    let newCount = 0;
+    const BATCH_SIZE = 5;
 
-    console.log('🧠 Generating case summaries via OpenAI...\n');
-
-    for (const c of cases) {
+    // Filter out already-cached cases
+    const uncached = cases.filter(c => {
         if (cached[c.id]) {
             console.log(`  ⏭️  ${c.filename} (cached)`);
-            continue;
+            return false;
         }
+        return true;
+    });
 
-        try {
-            console.log(`  🔄 Summarizing ${c.filename}...`);
-            const summary = await summarizeCase(c.text, c.filename, keywords, context);
-            cached[c.id] = { filename: c.filename, summary };
-            newCount++;
+    if (uncached.length === 0) {
+        console.log('\n✅ All summaries cached, nothing new to generate.\n');
+        return cached;
+    }
 
-            // Save after each to avoid losing progress
-            saveSummaries(cached);
+    console.log(`🧠 Summarizing ${uncached.length} cases via OpenAI (${BATCH_SIZE} in parallel)...\n`);
+    let completed = 0;
 
-            // Brief delay to respect rate limits
-            await new Promise(r => setTimeout(r, 500));
-        } catch (err) {
-            console.log(`  ❌ ${c.filename}: ${err.message}`);
+    // Process in batches of BATCH_SIZE
+    for (let i = 0; i < uncached.length; i += BATCH_SIZE) {
+        const batch = uncached.slice(i, i + BATCH_SIZE);
+        const batchNum = Math.floor(i / BATCH_SIZE) + 1;
+        const totalBatches = Math.ceil(uncached.length / BATCH_SIZE);
+        console.log(`  📦 Batch ${batchNum}/${totalBatches} (${batch.length} cases)...`);
+
+        const results = await Promise.allSettled(
+            batch.map(c => summarizeCase(c.text, c.filename, keywords, context))
+        );
+
+        // Process results
+        results.forEach((result, j) => {
+            const c = batch[j];
+            if (result.status === 'fulfilled') {
+                cached[c.id] = { filename: c.filename, summary: result.value };
+                completed++;
+                console.log(`    ✅ ${c.filename}`);
+            } else {
+                console.log(`    ❌ ${c.filename}: ${result.reason?.message || 'Unknown error'}`);
+            }
+        });
+
+        // Save cache after each batch
+        saveSummaries(cached);
+
+        // Brief pause between batches to be respectful to rate limits
+        if (i + BATCH_SIZE < uncached.length) {
+            await new Promise(r => setTimeout(r, 200));
         }
     }
 
-    console.log(`\n✅ Summaries ready: ${Object.keys(cached).length} total (${newCount} new)\n`);
+    console.log(`\n✅ Summaries ready: ${Object.keys(cached).length} total (${completed} new)\n`);
     return cached;
 }
 
