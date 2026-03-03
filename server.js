@@ -6,7 +6,7 @@ require('dotenv').config();
 
 const { searchCases } = require('./src/search');
 const { getCaseHTML, downloadCase, downloadMultipleCases, DOWNLOADS_DIR } = require('./src/download');
-const { summarizeAll, rankByRelevance, chat, getFilterSuggestions } = require('./src/analyzer');
+const { summarizeAll, rankByRelevance, scoreRelevancy, generateKeywords, chat, getFilterSuggestions } = require('./src/analyzer');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -66,6 +66,28 @@ app.post('/api/download', async (req, res) => {
     }
 });
 
+// ──────────────────────── Keyword Generation ────────────────────────
+
+/**
+ * POST /api/keywords
+ * Body: { narrative: string }
+ * Returns AI-generated search keywords from a research narrative.
+ */
+app.post('/api/keywords', async (req, res) => {
+    try {
+        const { narrative } = req.body;
+        if (!narrative) return res.status(400).json({ error: 'narrative is required' });
+
+        console.log(`🔑 Generating keywords for narrative (${narrative.length} chars)...`);
+        const result = await generateKeywords(narrative);
+        console.log(`✅ Keywords: ${result.keywords}`);
+        res.json(result);
+    } catch (err) {
+        console.error('Keywords error:', err.message);
+        res.status(500).json({ error: err.message });
+    }
+});
+
 // ──────────────────────── REFINE: Generate smart filter questions ────────────────────────
 
 app.post('/api/refine', async (req, res) => {
@@ -88,7 +110,7 @@ app.post('/api/refine', async (req, res) => {
 
 app.post('/api/analyze', async (req, res) => {
     try {
-        const { keywords, context, count = 100, filters = {} } = req.body;
+        const { keywords, context, count = 100, filters = {}, customPrompt = null } = req.body;
         if (!keywords) return res.status(400).json({ error: 'keywords is required' });
         if (!context) return res.status(400).json({ error: 'context is required' });
 
@@ -324,7 +346,7 @@ app.post('/api/analyze', async (req, res) => {
 
         // Step 4: Rank by relevance
         send({ step: 'rank', message: `Ranking ${totalAnalyzed} cases by relevance to your situation...` });
-        const rankResult = await rankByRelevance(currentSummaries, context);
+        const rankResult = await rankByRelevance(currentSummaries, context, customPrompt || null);
 
         // Enrich rankings with case metadata
         if (rankResult.rankings) {
@@ -353,6 +375,44 @@ app.post('/api/analyze', async (req, res) => {
         console.error('Analyze error:', err.message);
         res.write(JSON.stringify({ step: 'error', message: err.message }) + '\n');
         res.end();
+    }
+});
+
+// ──────────────────────── Relevancy Score: Single Case (Prompt 2) ────────────────────────
+
+/**
+ * POST /api/score
+ * Body: { narrative: string, caseId?: string, caseSummary?: string }
+ *
+ * Evaluates how strongly a single case aligns with the research narrative.
+ * If caseId is provided, looks up the summary from the last analysis run.
+ * If caseSummary is provided directly, uses that.
+ */
+app.post('/api/score', async (req, res) => {
+    try {
+        const { narrative, caseId, caseSummary } = req.body;
+        if (!narrative) return res.status(400).json({ error: 'narrative is required' });
+
+        let summary = caseSummary;
+
+        // If no inline summary, look up from last analysis cache
+        if (!summary && caseId) {
+            if (!cachedSummaries || !cachedSummaries[caseId]) {
+                return res.status(404).json({ error: `Case ID "${caseId}" not found in current session. Run analysis first or provide caseSummary directly.` });
+            }
+            summary = cachedSummaries[caseId].summary;
+        }
+
+        if (!summary) {
+            return res.status(400).json({ error: 'Either caseId (from an analyzed session) or caseSummary is required' });
+        }
+
+        console.log(`⚖️  Scoring relevancy for case: ${caseId || '(inline summary)'}`);
+        const result = await scoreRelevancy(narrative, summary, caseId || '');
+        res.json(result);
+    } catch (err) {
+        console.error('Score error:', err.message);
+        res.status(500).json({ error: err.message });
     }
 });
 

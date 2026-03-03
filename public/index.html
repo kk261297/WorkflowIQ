@@ -108,134 +108,94 @@
             background: var(--success);
         }
 
-        /* ─── Sections ─── */
+        /* ─── Container ─── */
         .container {
             max-width: 1100px;
             margin: 0 auto;
             padding: 0 24px;
         }
 
-        /* ─── Input Section ─── */
-        .input-section {
-            padding: 40px 0 32px;
+        /* ─── Step Header ─── */
+        .step-header {
+            padding: 40px 0 24px;
         }
 
-        .input-section h2 {
+        .step-header h2 {
             font-size: 22px;
             font-weight: 700;
             margin-bottom: 4px;
         }
 
-        .input-section p {
+        .step-header p {
             color: var(--text-secondary);
             font-size: 14px;
-            margin-bottom: 24px;
+            margin-bottom: 0;
         }
 
-        .input-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-            margin-bottom: 16px;
-        }
-
-        /* ─── Refinement Section ─── */
-        .refine-section {
-            display: none;
-            padding: 40px 0 32px;
-        }
-
-        .refine-section h2 {
-            font-size: 22px;
-            font-weight: 700;
-            margin-bottom: 4px;
-        }
-
-        .refine-section>p {
-            color: var(--text-secondary);
-            font-size: 14px;
-            margin-bottom: 24px;
-        }
-
-        .refine-loading {
-            text-align: center;
-            padding: 40px;
-            color: var(--text-secondary);
-        }
-
-        .question-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-lg);
-            padding: 20px;
-            margin-bottom: 16px;
-            animation: fadeInUp 0.3s ease;
-        }
-
-        .question-card .q-number {
-            font-size: 11px;
-            font-weight: 700;
-            color: var(--accent);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 6px;
-        }
-
-        .question-card .q-text {
-            font-size: 15px;
-            font-weight: 600;
-            margin-bottom: 14px;
-            line-height: 1.4;
-        }
-
-        .q-options {
+        /* ─── Step Indicator ─── */
+        .step-indicator {
             display: flex;
-            flex-wrap: wrap;
+            align-items: center;
+            gap: 0;
+            margin-bottom: 32px;
+        }
+
+        .step-dot {
+            display: flex;
+            align-items: center;
             gap: 8px;
-        }
-
-        .q-option {
-            position: relative;
-        }
-
-        .q-option input[type="radio"],
-        .q-option input[type="checkbox"] {
-            position: absolute;
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .q-option label {
-            display: inline-block;
-            padding: 8px 16px;
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            font-size: 13px;
-            cursor: pointer;
-            transition: all 0.2s;
-            color: var(--text-secondary);
-            background: var(--bg-input);
-        }
-
-        .q-option label:hover {
-            border-color: var(--accent);
-            color: var(--text-primary);
-        }
-
-        .q-option input[type="radio"]:checked+label,
-        .q-option input[type="checkbox"]:checked+label {
-            border-color: var(--accent);
-            background: rgba(79, 110, 247, 0.15);
-            color: var(--accent);
+            font-size: 12px;
             font-weight: 600;
+            color: var(--text-muted);
         }
 
-        .refine-actions {
+        .step-dot .dot {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 2px solid var(--border);
             display: flex;
-            gap: 12px;
-            margin-top: 24px;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            transition: all 0.3s;
         }
 
+        .step-dot.active .dot {
+            background: var(--accent-gradient);
+            border-color: transparent;
+            color: white;
+            box-shadow: 0 0 12px var(--accent-glow);
+        }
+
+        .step-dot.done .dot {
+            background: var(--success);
+            border-color: transparent;
+            color: white;
+        }
+
+        .step-dot.active {
+            color: var(--accent);
+        }
+
+        .step-dot.done {
+            color: var(--success);
+        }
+
+        .step-line {
+            flex: 1;
+            height: 2px;
+            background: var(--border);
+            margin: 0 12px;
+            transition: background 0.3s;
+        }
+
+        .step-line.done {
+            background: var(--success);
+        }
+
+        /* ─── Input Group ─── */
         .input-group label {
             display: block;
             font-size: 12px;
@@ -262,8 +222,8 @@
 
         .input-group textarea {
             resize: vertical;
-            min-height: 80px;
-            line-height: 1.5;
+            min-height: 110px;
+            line-height: 1.6;
         }
 
         .input-group input:focus,
@@ -273,16 +233,154 @@
             box-shadow: 0 0 0 3px var(--accent-glow);
         }
 
-        .context-area {
-            grid-column: 1 / -1;
+        /* ─── Keyword Chips ─── */
+        .keyword-chips-wrapper {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 10px 12px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+            min-height: 54px;
+            transition: border-color 0.2s;
+            cursor: text;
         }
 
-        .filter-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
+        .keyword-chips-wrapper:focus-within {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-glow);
         }
 
+        .keyword-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 10px 5px 12px;
+            background: rgba(79, 110, 247, 0.15);
+            border: 1px solid rgba(79, 110, 247, 0.35);
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #a0b4ff;
+            animation: fadeInUp 0.2s ease;
+        }
+
+        .keyword-chip .chip-remove {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(79, 110, 247, 0.3);
+            cursor: pointer;
+            font-size: 12px;
+            line-height: 1;
+            transition: background 0.15s;
+        }
+
+        .keyword-chip .chip-remove:hover {
+            background: var(--danger);
+            color: white;
+        }
+
+        .keyword-chip-input {
+            border: none;
+            background: transparent;
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 13px;
+            outline: none;
+            flex: 1;
+            min-width: 120px;
+            padding: 3px 0;
+        }
+
+        .chip-hint {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 6px;
+        }
+
+        /* ─── Keyword Loading state ─── */
+        .keyword-loading {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 16px;
+            color: var(--text-secondary);
+            font-size: 13px;
+        }
+
+        /* ─── Filters Section ─── */
+        .question-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin-bottom: 16px;
+            animation: fadeInUp 0.3s ease;
+        }
+
+        .question-card .q-text {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 14px;
+            line-height: 1.4;
+        }
+
+        .q-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .q-option {
+            position: relative;
+        }
+
+        .q-option input[type="checkbox"] {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .q-option label {
+            display: inline-block;
+            padding: 8px 16px;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--text-secondary);
+            background: var(--bg-input);
+        }
+
+        .q-option label:hover {
+            border-color: var(--accent);
+            color: var(--text-primary);
+        }
+
+        .q-option input[type="checkbox"]:checked+label {
+            border-color: var(--accent);
+            background: rgba(79, 110, 247, 0.15);
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .filter-loading {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 0;
+            color: var(--text-secondary);
+            font-size: 13px;
+        }
+
+        /* ─── Buttons ─── */
         .btn {
             padding: 12px 24px;
             border: none;
@@ -334,37 +432,10 @@
             display: flex;
             gap: 12px;
             align-items: center;
-        }
-
-        .filter-toggle {
-            color: var(--text-secondary);
-            font-size: 13px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            margin-bottom: 12px;
-        }
-
-        .filter-toggle:hover {
-            color: var(--accent);
-        }
-
-        .filters-panel {
-            display: none;
-            margin-bottom: 16px;
-        }
-
-        .filters-panel.open {
-            display: block;
+            margin-top: 24px;
         }
 
         /* ─── Progress ─── */
-        .progress-section {
-            display: none;
-            padding: 24px 0;
-        }
-
         .progress-card {
             background: var(--bg-card);
             border: 1px solid var(--border);
@@ -417,12 +488,7 @@
             margin-top: 16px;
         }
 
-        /* ─── Results Section ─── */
-        .results-section {
-            display: none;
-            padding: 0 0 40px;
-        }
-
+        /* ─── Results ─── */
         .results-header {
             display: flex;
             align-items: center;
@@ -459,7 +525,6 @@
             margin-bottom: 6px;
         }
 
-        /* ─── Ranking Cards ─── */
         .ranking-grid {
             display: flex;
             flex-direction: column;
@@ -548,6 +613,35 @@
             gap: 3px;
         }
 
+        .score-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .score-badge.high {
+            background: rgba(34, 197, 94, 0.15);
+            color: var(--success);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+
+        .score-badge.mid {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--warning);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        .score-badge.low {
+            background: rgba(90, 101, 128, 0.15);
+            color: var(--text-muted);
+            border: 1px solid rgba(90, 101, 128, 0.3);
+        }
+
         .ranking-reason {
             font-size: 13px;
             color: var(--text-secondary);
@@ -562,11 +656,6 @@
             flex-direction: column;
             gap: 6px;
             min-width: 90px;
-        }
-
-        .case-summary-toggle {
-            width: 100%;
-            grid-column: 1 / -1;
         }
 
         .case-summary-content {
@@ -597,9 +686,8 @@
             margin-bottom: 8px;
         }
 
-        /* ─── Chat Follow-up ─── */
+        /* ─── Chat ─── */
         .chat-section {
-            display: none;
             padding: 0 0 40px;
         }
 
@@ -774,7 +862,16 @@
             line-height: 1.8;
         }
 
-        /* ─── Animations ─── */
+        /* ─── Misc ─── */
+        .section {
+            display: none;
+            padding-bottom: 40px;
+        }
+
+        .section.visible {
+            display: block;
+        }
+
         .spinner {
             width: 18px;
             height: 18px;
@@ -783,6 +880,14 @@
             border-radius: 50%;
             animation: spin 0.8s linear infinite;
             display: inline-block;
+            flex-shrink: 0;
+        }
+
+        .input-row-2col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 16px;
         }
 
         @keyframes fadeInUp {
@@ -853,17 +958,49 @@
     </div>
 
     <div class="container">
-        <!-- ── Step 1: Input ── -->
-        <div class="input-section" id="inputSection">
-            <h2>🔍 Search & Analyze Cases</h2>
-            <p>Enter your search keywords and describe your case. The AI will search, read, and rank up to 100 cases by
-                relevance — no PDF download needed.</p>
 
-            <div class="input-grid">
-                <div class="input-group">
-                    <label>Search Keywords</label>
-                    <input type="text" id="keywords" placeholder='e.g. "GST pre-deposit appeal interest"' />
+        <!-- ── Step Indicator ── -->
+        <div style="padding-top:28px" id="stepIndicatorWrap">
+            <div class="step-indicator">
+                <div class="step-dot active" id="si-1">
+                    <div class="dot">1</div>
+                    <span>Narrative</span>
                 </div>
+                <div class="step-line" id="sl-1"></div>
+                <div class="step-dot" id="si-2">
+                    <div class="dot">2</div>
+                    <span>Keywords</span>
+                </div>
+                <div class="step-line" id="sl-2"></div>
+                <div class="step-dot" id="si-3">
+                    <div class="dot">3</div>
+                    <span>Filters</span>
+                </div>
+                <div class="step-line" id="sl-3"></div>
+                <div class="step-dot" id="si-4">
+                    <div class="dot">4</div>
+                    <span>Results</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ══ STEP 1: Narrative Input ══ -->
+        <div class="section visible" id="s-narrative">
+            <div class="step-header">
+                <h2>📝 Describe Your Research</h2>
+                <p>Write your legal argument or research objective in plain language. The AI will generate search
+                    keywords automatically.</p>
+            </div>
+
+            <div style="margin-bottom:16px">
+                <div class="input-group">
+                    <label>Research Narrative</label>
+                    <textarea id="narrative" rows="5"
+                        placeholder="e.g. The taxpayer is entitled to interest on the refund of pre-deposit paid during GST appeal where the appellate authority decided in favour of the taxpayer. The department is disputing the payment of such interest claiming it is not mandated under the CGST Act."></textarea>
+                </div>
+            </div>
+
+            <div class="input-row-2col">
                 <div class="input-group">
                     <label>Number of Cases to Analyze</label>
                     <select id="caseCount">
@@ -875,79 +1012,93 @@
                         <option value="100">100 cases (~6 min)</option>
                     </select>
                 </div>
-                <div class="input-group context-area">
-                    <label>Describe Your Case / Context</label>
-                    <textarea id="context" rows="3"
-                        placeholder="e.g. Department should pay interest to taxpayer if decision is made in favour of taxpayer, while refunding pre-deposit paid while filing appeal"></textarea>
-                </div>
             </div>
 
-            <div class="filter-toggle" onclick="document.getElementById('filtersPanel').classList.toggle('open')">
-                <span class="material-icons-round" style="font-size:16px">tune</span>
-                Advanced Filters
-                <span class="material-icons-round" style="font-size:16px">expand_more</span>
-            </div>
-
-            <div class="filters-panel" id="filtersPanel">
-                <div class="input-grid">
-                    <div class="input-group">
-                        <label>Court</label>
-                        <select id="filterCourt">
-                            <option value="">All Courts</option>
-                            <option value="Supreme Court">Supreme Court</option>
-                            <option value="High Court">High Court</option>
-                            <option value="Tribunal">Tribunal</option>
-                            <option value="Advance Ruling">Advance Ruling</option>
-                        </select>
-                    </div>
-                    <div class="input-group">
-                        <label>Sort By</label>
-                        <select id="filterSort">
-                            <option value="relevance">Relevance</option>
-                            <option value="date">Date (newest first)</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <div class="action-row">
-                <button class="btn btn-primary" id="analyzeBtn" onclick="startRefineFlow()">
-                    <span class="material-icons-round" style="font-size:18px">psychology</span>
-                    Analyze Cases
+            <div class="action-row" style="margin-top:8px">
+                <button class="btn btn-primary" id="generateKwBtn" onclick="startKeywordGeneration()">
+                    <span class="material-icons-round" style="font-size:18px">auto_awesome</span>
+                    Generate Keywords &rarr;
+                </button>
+                <button class="btn btn-secondary btn-sm" onclick="openPromptEditor()"
+                    title="View or edit the AI scoring prompt" style="margin-left:auto">
+                    <span class="material-icons-round" style="font-size:15px">tune</span>
+                    Scoring Prompt
                 </button>
             </div>
         </div>
 
-        <!-- ── Step 1.5: Refinement Questions ── -->
-        <div class="refine-section" id="refineSection">
-            <h2>🎯 Refine Your Search</h2>
-            <p>Based on your query, here are some questions to help narrow down the most relevant cases.</p>
-            <div id="refineLoading" class="refine-loading">
-                <div class="spinner" style="margin: 0 auto 12px"></div>
-                <div>AI is generating smart filter questions...</div>
+        <!-- ══ STEP 2: Keyword Review ══ -->
+        <div class="section" id="s-keywords">
+            <div class="step-header">
+                <h2>🔍 Review Search Keywords</h2>
+                <p>These keywords were generated from your narrative. Edit, remove, or add terms before searching.</p>
             </div>
-            <div id="refineQuestions"></div>
-            <div class="refine-actions" id="refineActions" style="display:none">
-                <button class="btn btn-primary" onclick="submitRefinedSearch()">
-                    <span class="material-icons-round" style="font-size:18px">search</span>
-                    Search with Filters
+
+            <div class="input-group" style="margin-bottom:6px">
+                <label>Search Keywords <span
+                        style="text-transform:none;font-weight:400;color:var(--text-muted)">(editable)</span></label>
+                <div class="keyword-chips-wrapper" id="chipsWrapper"
+                    onclick="document.getElementById('chipInput').focus()">
+                    <div class="keyword-loading" id="kwLoading">
+                        <div class="spinner"></div>
+                        <span>AI is generating keywords from your narrative…</span>
+                    </div>
+                    <input type="text" id="chipInput" class="keyword-chip-input" style="display:none"
+                        placeholder="Type a keyword and press Enter…" onkeydown="handleChipInput(event)">
+                </div>
+            </div>
+            <div class="chip-hint">💡 Press <kbd
+                    style="background:var(--bg-card);border:1px solid var(--border);padding:1px 5px;border-radius:4px;font-size:11px">Enter</kbd>
+                or <kbd
+                    style="background:var(--bg-card);border:1px solid var(--border);padding:1px 5px;border-radius:4px;font-size:11px">Space</kbd>
+                to add a keyword · Click × to remove</div>
+
+            <div class="action-row">
+                <button class="btn btn-primary" id="proceedFiltersBtn" onclick="proceedToFilters()" disabled>
+                    <span class="material-icons-round" style="font-size:18px">tune</span>
+                    Set Filters →
                 </button>
-                <button class="btn btn-secondary" onclick="submitRefinedSearch(true)">
-                    <span class="material-icons-round" style="font-size:18px">skip_next</span>
-                    Skip &amp; Search All
-                </button>
-                <button class="btn btn-secondary" onclick="newAnalysis()">
+                <button class="btn btn-secondary" onclick="goTo('s-narrative', 1)">
                     <span class="material-icons-round" style="font-size:18px">arrow_back</span>
                     Back
                 </button>
             </div>
         </div>
 
-        <!-- ── Step 2: Progress ── -->
-        <div class="progress-section" id="progressSection">
-            <div class="progress-card">
-                <h3 style="margin-bottom:4px" id="progressTitle">Analyzing...</h3>
-                <div class="progress-status" id="progressStatus">Starting...</div>
+        <!-- ══ STEP 3: Filters ══ -->
+        <div class="section" id="s-filters">
+            <div class="step-header">
+                <h2>🎯 Refine Your Search</h2>
+                <p>Filters have been pre-selected based on your narrative. Adjust as needed.</p>
+            </div>
+
+            <div id="filterLoading" class="filter-loading">
+                <div class="spinner"></div>
+                <span>AI is selecting best filters for your narrative…</span>
+            </div>
+            <div id="filterQuestions"></div>
+
+            <div class="action-row" id="filterActions" style="display:none">
+                <button class="btn btn-primary" onclick="submitFilters()">
+                    <span class="material-icons-round" style="font-size:18px">psychology</span>
+                    Analyze Cases
+                </button>
+                <button class="btn btn-secondary" onclick="submitFilters(true)">
+                    <span class="material-icons-round" style="font-size:18px">skip_next</span>
+                    Skip &amp; Search All
+                </button>
+                <button class="btn btn-secondary" onclick="goTo('s-keywords', 2)">
+                    <span class="material-icons-round" style="font-size:18px">arrow_back</span>
+                    Back
+                </button>
+            </div>
+        </div>
+
+        <!-- ══ STEP 4: Progress ══ -->
+        <div class="section" id="s-progress">
+            <div class="progress-card" style="margin-top:32px">
+                <h3 style="margin-bottom:4px" id="progressTitle">Analyzing…</h3>
+                <div class="progress-status" id="progressStatus">Starting…</div>
                 <div class="progress-bar-wrapper">
                     <div class="progress-bar-fill" id="progressBar"></div>
                 </div>
@@ -955,28 +1106,36 @@
             </div>
         </div>
 
-        <!-- ── Step 3: Results ── -->
-        <div class="results-section" id="resultsSection">
-            <div class="results-header">
+        <!-- ══ STEP 4: Results ══ -->
+        <div class="section" id="s-results">
+            <div class="results-header" style="margin-top:32px">
                 <h2>📊 Relevancy Rankings</h2>
                 <span class="results-count" id="resultsCount"></span>
             </div>
             <div id="recommendationBox"></div>
             <div class="ranking-grid" id="rankingGrid"></div>
+
+            <div style="margin-top:32px; text-align:center">
+                <button class="btn btn-secondary" onclick="newSearch()">
+                    <span class="material-icons-round" style="font-size:16px">restart_alt</span>
+                    New Research
+                </button>
+            </div>
         </div>
 
-        <!-- ── Chat Follow-up ── -->
-        <div class="chat-section" id="chatSection">
+        <!-- ══ Chat Follow-up ══ -->
+        <div class="section" id="s-chat">
             <h3>💬 Follow-up Questions</h3>
             <div class="chat-messages" id="chatMessages"></div>
             <div class="chat-input-row">
-                <input type="text" id="chatInput" placeholder="Ask a follow-up question..."
+                <input type="text" id="chatInput" placeholder="Ask a follow-up question…"
                     onkeydown="if(event.key==='Enter')sendFollowup()" />
                 <button class="send-btn" id="sendBtn" onclick="sendFollowup()">
                     <span class="material-icons-round">send</span>
                 </button>
             </div>
         </div>
+
     </div>
 
     <!-- Preview Modal -->
@@ -989,7 +1148,39 @@
                 </button>
             </div>
             <div class="modal-body">
-                <div class="case-preview-content" id="previewContent">Loading...</div>
+                <div class="case-preview-content" id="previewContent">Loading…</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Prompt Editor Modal -->
+    <div class="modal-overlay" id="promptModal">
+        <div class="modal" style="max-width:720px">
+            <div class="modal-header">
+                <h3>⚖️ Relevancy Scoring Prompt</h3>
+                <button class="modal-close" onclick="document.getElementById('promptModal').classList.remove('open')">
+                    <span class="material-icons-round">close</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p style="font-size:13px;color:var(--text-secondary);margin-bottom:14px;line-height:1.5">
+                    This is the system prompt used by the AI to evaluate and score how well each case matches your
+                    research narrative.
+                    Edit it to adjust scoring behaviour, tone, or criteria. Changes apply to the next analysis run.
+                </p>
+                <div class="input-group">
+                    <label>System Prompt</label>
+                    <textarea id="promptEditorArea" rows="18"
+                        style="font-family:monospace;font-size:12px;line-height:1.6;min-height:340px"></textarea>
+                </div>
+                <div style="display:flex;gap:10px;margin-top:16px">
+                    <button class="btn btn-primary" onclick="savePrompt()">
+                        <span class="material-icons-round" style="font-size:16px">check</span> Save &amp; Close
+                    </button>
+                    <button class="btn btn-secondary" onclick="resetPrompt()">
+                        <span class="material-icons-round" style="font-size:16px">restart_alt</span> Reset to Default
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -997,159 +1188,285 @@
     <script>
         const API = '';
 
+        // ── Default relevancy scoring system prompt ──
+        const DEFAULT_RELEVANCY_PROMPT = `You are acting as an impartial constitutional court evaluating whether a precedent meaningfully supports a legal argument. You must be neutral, analytical, and independent. Do not favour the narrative. Assess legal alignment objectively.
+
+You will receive a Research Narrative and multiple Case Summaries. For EACH case, perform the following analysis:
+- Compare the legal issues in the case summary with the research narrative.
+- Identify:
+  - Legal issue overlap
+  - Factual similarity
+  - Statutory similarity
+  - Contextual similarity (tax type, procedural stage, etc.)
+- Determine whether the case:
+  - Directly supports
+  - Partially supports
+  - Is distinguishable
+  - Is adverse
+- Assign a Relevancy Score from 0 to 100 based on:
+  - 90–100: Direct precedent, highly similar facts & issue
+  - 70–89: Strong persuasive support
+  - 50–69: Moderate relevance, distinguishable facts
+  - 30–49: Weak support
+  - 0–29: Not relevant or adverse
+
+Respond in this exact JSON format (no markdown, just raw JSON):
+{
+  "rankings": [
+    {
+      "case_number": 1,
+      "id": "case_id",
+      "filename": "filename.pdf",
+      "score": 85,
+      "category": "Direct / Strong / Moderate / Weak / Not Relevant / Adverse",
+      "reason": "Brief judicial analysis: issue alignment, factual alignment, statutory alignment, distinguishing factors, and why it supports or does not support the narrative"
+    }
+  ],
+  "recommendation": "Brief overall recommendation for the user's case"
+}
+
+Sort rankings by score descending (most relevant first). Return ALL cases. Do not inflate scores.`;
+
+        let customRelevancyPrompt = null; // null = use server default
+
+        function openPromptEditor() {
+            document.getElementById('promptEditorArea').value = customRelevancyPrompt || DEFAULT_RELEVANCY_PROMPT;
+            document.getElementById('promptModal').classList.add('open');
+        }
+
+        function savePrompt() {
+            const val = document.getElementById('promptEditorArea').value.trim();
+            customRelevancyPrompt = val === DEFAULT_RELEVANCY_PROMPT.trim() ? null : (val || null);
+            document.getElementById('promptModal').classList.remove('open');
+        }
+
+        function resetPrompt() {
+            customRelevancyPrompt = null;
+            document.getElementById('promptEditorArea').value = DEFAULT_RELEVANCY_PROMPT;
+        }
+
         const FILTER_CONFIG = [
             {
                 id: 'module',
-                label: 'Which tax module does your case relate to?',
-                type: 'checkbox',
-                options: [
-                    { label: 'GST', value: 'GST' },
-                    { label: 'Customs', value: 'Customs' },
-                    { label: 'Excise & Service Tax', value: 'Excise & Service Tax' },
-                    { label: 'Foreign Trade Policy', value: 'Foreign Trade Policy' }
-                ]
+                label: 'Tax module',
+                options: ['GST', 'Customs', 'Excise & Service Tax', 'Foreign Trade Policy']
             },
             {
                 id: 'docType',
-                label: 'What type of document are you looking for?',
-                type: 'checkbox',
-                options: [
-                    { label: 'Case Laws', value: 'Case Laws' },
-                    { label: 'Notifications', value: 'Notifications' },
-                    { label: 'Acts', value: 'Acts' },
-                    { label: 'Rules', value: 'Rules' }
-                ]
+                label: 'Document type',
+                options: ['Case Laws', 'Notifications', 'Acts', 'Rules']
             },
             {
                 id: 'court',
-                label: 'Which court level are you interested in?',
-                type: 'checkbox',
-                options: [
-                    { label: 'Supreme Court', value: 'Supreme Court' },
-                    { label: 'High Court', value: 'High Court' },
-                    { label: 'Tribunal', value: 'Tribunal' },
-                    { label: 'Advance Ruling', value: 'Advance Ruling' }
-                ]
+                label: 'Court level',
+                options: ['Supreme Court', 'High Court', 'Tribunal', 'Advance Ruling']
             },
             {
                 id: 'yearList',
-                label: 'Year of Publication',
-                type: 'checkbox',
-                options: [
-                    { label: '2026', value: '2026' },
-                    { label: '2025', value: '2025' },
-                    { label: '2024', value: '2024' },
-                    { label: '2023', value: '2023' },
-                    { label: '2022', value: '2022' },
-                    { label: '2021', value: '2021' },
-                    { label: '2020', value: '2020' },
-                    { label: '2019', value: '2019' },
-                    { label: '2018', value: '2018' },
-                    { label: '2017', value: '2017' },
-                    { label: '2016', value: '2016' },
-                    { label: '2015', value: '2015' }
-                ]
+                label: 'Year',
+                options: ['2026', '2025', '2024', '2023', '2022', '2021', '2020', '2019', '2018', '2017', '2016', '2015']
             }
         ];
 
+        // ── App State ──
+        let currentNarrative = '';
         let currentKeywords = '';
-        let currentContext = '';
         let currentCount = 50;
         let currentFilters = {};
+        let chips = [];
 
-        // ── Step 1: Refine Flow ──
-        async function startRefineFlow() {
-            currentKeywords = document.getElementById('keywords').value.trim();
-            currentContext = document.getElementById('context').value.trim();
+        // ── Step Navigation ──
+        const STEPS = ['s-narrative', 's-keywords', 's-filters', 's-progress', 's-results', 's-chat'];
+
+        function goTo(sectionId, stepNum) {
+            STEPS.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.classList.remove('visible');
+            });
+            const target = document.getElementById(sectionId);
+            if (target) target.classList.add('visible');
+
+            if (sectionId === 's-results') {
+                document.getElementById('s-chat').classList.add('visible');
+                document.getElementById('stepIndicatorWrap').style.display = 'none';
+            } else if (sectionId === 's-progress') {
+                document.getElementById('stepIndicatorWrap').style.display = 'none';
+            } else {
+                document.getElementById('stepIndicatorWrap').style.display = 'block';
+            }
+
+            // Update step dots 1–3
+            for (let i = 1; i <= 3; i++) {
+                const dot = document.getElementById('si-' + i);
+                const line = document.getElementById('sl-' + i);
+                if (!dot) continue;
+                dot.classList.remove('active', 'done');
+                if (i < stepNum) { dot.classList.add('done'); if (line) line.classList.add('done'); }
+                else if (i === stepNum) { dot.classList.add('active'); if (line) line.classList.remove('done'); }
+                else { if (line) line.classList.remove('done'); }
+            }
+
+            // Step 4 indicator for results
+            const si4 = document.getElementById('si-4');
+            if (si4) {
+                si4.classList.remove('active', 'done');
+                if (sectionId === 's-results') si4.classList.add('active');
+            }
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // ══ STEP 1: Generate Keywords ══
+        async function startKeywordGeneration() {
+            currentNarrative = document.getElementById('narrative').value.trim();
             currentCount = parseInt(document.getElementById('caseCount').value);
 
-            if (!currentKeywords) { alert('Please enter search keywords'); return; }
-            if (!currentContext) { alert('Please describe your case / context'); return; }
+            if (!currentNarrative) { alert('Please describe your research narrative first.'); return; }
 
-            // Switch to refinement view
-            document.getElementById('inputSection').style.display = 'none';
-            document.getElementById('refineSection').style.display = 'block';
-            document.getElementById('refineLoading').style.display = 'block';
-            document.getElementById('refineLoading').textContent = '🤖 AI is analyzing your query to pre-select the best filters...';
-            document.getElementById('refineActions').style.display = 'flex';
+            goTo('s-keywords', 2);
+            setStatus('loading', 'Generating keywords…');
 
-            // Render all filters immediately without suggestions
-            renderAllFilters({});
+            // Reset chip area
+            chips = [];
+            document.getElementById('chipsWrapper').innerHTML =
+                `<div class="keyword-loading" id="kwLoading"><div class="spinner"></div><span>AI is generating keywords from your narrative…</span></div>
+                 <input type="text" id="chipInput" class="keyword-chip-input" style="display:none" placeholder="Type a keyword and press Enter…" onkeydown="handleChipInput(event)">`;
+            document.getElementById('proceedFiltersBtn').disabled = true;
+
+            try {
+                const res = await fetch(API + '/api/keywords', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ narrative: currentNarrative })
+                });
+                const data = await res.json();
+                if (data.error) throw new Error(data.error);
+
+                chips = data.keywordList || [];
+                renderChips();
+                setStatus('ready', 'Keywords ready — edit if needed');
+            } catch (err) {
+                console.error('Keywords error:', err);
+                // Fallback: empty chip input so user can type manually
+                chips = [];
+                renderChips();
+                setStatus('ready', 'Enter keywords manually');
+            }
+        }
+
+        // ─── Chip rendering & interaction ───
+        function renderChips() {
+            const wrapper = document.getElementById('chipsWrapper');
+            wrapper.innerHTML = chips.map((kw, i) =>
+                `<span class="keyword-chip">
+                    ${esc(kw)}
+                    <span class="chip-remove" onclick="removeChip(${i})">✕</span>
+                </span>`
+            ).join('') +
+                `<input type="text" id="chipInput" class="keyword-chip-input"
+                placeholder="${chips.length === 0 ? 'Type a keyword and press Enter…' : 'Add more…'}"
+                onkeydown="handleChipInput(event)">`;
+
+            document.getElementById('proceedFiltersBtn').disabled = chips.length === 0;
+        }
+
+        function removeChip(index) {
+            chips.splice(index, 1);
+            renderChips();
+        }
+
+        function handleChipInput(e) {
+            const input = e.target;
+            if (e.key === 'Enter' || e.key === ',') {
+                e.preventDefault();
+                addChipFromInput(input);
+            } else if (e.key === 'Backspace' && input.value === '' && chips.length > 0) {
+                chips.pop();
+                renderChips();
+                setTimeout(() => document.getElementById('chipInput')?.focus(), 0);
+            }
+        }
+
+        function addChipFromInput(input) {
+            const val = input.value.trim();
+            if (val && !chips.includes(val)) {
+                chips.push(val);
+                renderChips();
+                setTimeout(() => document.getElementById('chipInput')?.focus(), 0);
+            } else {
+                input.value = '';
+            }
+        }
+
+        // ══ STEP 2 → STEP 3: Load Filters ══
+        async function proceedToFilters() {
+            if (chips.length === 0) { alert('Please add at least one keyword.'); return; }
+            currentKeywords = chips.join(' ');
+
+            goTo('s-filters', 3);
+            setStatus('loading', 'Loading filters…');
+
+            document.getElementById('filterLoading').style.display = 'flex';
+            document.getElementById('filterActions').style.display = 'none';
+            renderFilterCheckboxes({});
 
             try {
                 const res = await fetch(API + '/api/refine', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ keywords: currentKeywords, context: currentContext })
+                    body: JSON.stringify({ keywords: currentKeywords, context: currentNarrative })
                 });
                 const data = await res.json();
-
-                if (data.suggested) {
-                    // Update UI to check suggested options
-                    renderAllFilters(data.suggested);
-                }
+                if (data.suggested) renderFilterCheckboxes(data.suggested);
             } catch (err) {
                 console.error('Refine error:', err);
-                // On error, just let user pick manually
             } finally {
-                document.getElementById('refineLoading').style.display = 'none';
+                document.getElementById('filterLoading').style.display = 'none';
+                document.getElementById('filterActions').style.display = 'flex';
+                setStatus('ready', 'Adjust filters and analyze');
             }
         }
 
-        function renderAllFilters(suggested = {}) {
-            const container = document.getElementById('refineQuestions');
-            container.innerHTML = FILTER_CONFIG.map((filter) => {
-                const suggestedValues = suggested[filter.id] || [];
-                const activeValues = suggestedValues;
-
-                const optionsHtml = filter.options.map((opt, j) => {
-                    const isChecked = activeValues.includes(opt.value) ? 'checked' : '';
+        function renderFilterCheckboxes(suggested = {}) {
+            const container = document.getElementById('filterQuestions');
+            container.innerHTML = FILTER_CONFIG.map(f => {
+                const suggestedVals = suggested[f.id] || [];
+                const opts = f.options.map((opt, j) => {
+                    const checked = suggestedVals.includes(opt) ? 'checked' : '';
                     return `<div class="q-option">
-                        <input type="checkbox" name="q_${filter.id}" id="q_${filter.id}_${j}" value="${opt.value}" ${isChecked}>
-                        <label for="q_${filter.id}_${j}">${esc(opt.label)}</label>
+                        <input type="checkbox" name="f_${f.id}" id="f_${f.id}_${j}" value="${esc(opt)}" ${checked}>
+                        <label for="f_${f.id}_${j}">${esc(opt)}</label>
                     </div>`;
                 }).join('');
-
                 return `<div class="question-card">
-                    <div class="q-text">${esc(filter.label)}</div>
-                    <div class="q-options">${optionsHtml}</div>
+                    <div class="q-text">${esc(f.label)}</div>
+                    <div class="q-options">${opts}</div>
                 </div>`;
             }).join('');
-
-            setStatus('ready', 'Review filters');
         }
 
-        function submitRefinedSearch(skipFilters = false) {
+        // ══ STEP 3 → STEP 4: Run Analysis ══
+        function submitFilters(skipFilters = false) {
             if (!skipFilters) {
-                // Collect selected inputs
                 currentFilters = {};
-                document.querySelectorAll('.question-card').forEach(card => {
-                    const inputs = card.querySelectorAll('input:checked');
-                    inputs.forEach(r => {
-                        const filterId = r.name.replace('q_', '');
-                        if (!currentFilters[filterId]) currentFilters[filterId] = [];
-                        currentFilters[filterId].push(r.value);
+                document.querySelectorAll('#filterQuestions .question-card').forEach(card => {
+                    card.querySelectorAll('input:checked').forEach(inp => {
+                        const id = inp.name.replace('f_', '');
+                        if (!currentFilters[id]) currentFilters[id] = [];
+                        currentFilters[id].push(inp.value);
                     });
                 });
             } else {
                 currentFilters = {};
             }
-
-            // Hide refinement, show progress
-            document.getElementById('refineSection').style.display = 'none';
             runAnalysis();
         }
 
-        // ── Step 2: Run Analysis ──
         async function runAnalysis() {
-            // Switch to progress view
-            document.getElementById('inputSection').style.display = 'none';
-            document.getElementById('refineSection').style.display = 'none';
-            document.getElementById('progressSection').style.display = 'block';
-            document.getElementById('resultsSection').style.display = 'none';
-            document.getElementById('chatSection').style.display = 'none';
+            goTo('s-progress', 4);
             document.getElementById('progressSteps').innerHTML = '';
-            setStatus('loading', 'Analyzing...');
+            document.getElementById('progressBar').style.width = '0%';
+            setStatus('loading', 'Analyzing…');
 
             try {
                 const response = await fetch(API + '/api/analyze', {
@@ -1157,9 +1474,10 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         keywords: currentKeywords,
-                        context: currentContext,
+                        context: currentNarrative,
                         count: currentCount,
-                        filters: currentFilters
+                        filters: currentFilters,
+                        customPrompt: customRelevancyPrompt || undefined
                     })
                 });
 
@@ -1172,7 +1490,6 @@
                 while (true) {
                     const { done, value } = await reader.read();
                     if (done) break;
-
                     buffer += decoder.decode(value, { stream: true });
                     const lines = buffer.split('\n');
                     buffer = lines.pop();
@@ -1180,30 +1497,20 @@
                     for (const line of lines) {
                         if (!line.trim()) continue;
                         let msg = null;
-                        try {
-                            msg = JSON.parse(line);
-                        } catch (e) {
-                            console.error('Parse error:', e);
-                            continue;
-                        }
+                        try { msg = JSON.parse(line); } catch { continue; }
+                        if (!msg) continue;
 
-                        if (msg) {
-                            handleProgress(msg, totalCases);
-                            if (msg.total != null) totalCases = msg.total;
-                            if (msg.step === 'done') {
-                                resultData = msg.data;
-                                resultData._totalAnalyzed = msg.totalAnalyzed;
-                            }
-                            if (msg.step === 'error') {
-                                throw new Error(msg.message);
-                            }
+                        handleProgress(msg, totalCases);
+                        if (msg.total != null) totalCases = msg.total;
+                        if (msg.step === 'done') {
+                            resultData = msg.data;
+                            resultData._totalAnalyzed = msg.totalAnalyzed;
                         }
+                        if (msg.step === 'error') throw new Error(msg.message);
                     }
                 }
 
-                if (resultData) {
-                    showResults(resultData);
-                }
+                if (resultData) showResults(resultData);
             } catch (err) {
                 updateProgress('error', '❌ ' + err.message, 0);
                 setStatus('error', 'Error');
@@ -1212,55 +1519,44 @@
 
         function handleProgress(msg, totalCases) {
             const steps = document.getElementById('progressSteps');
-
             switch (msg.step) {
                 case 'search':
                     updateProgress('search', msg.message, 5);
-                    addStep(steps, '🔍 Searching...', 'active');
-                    break;
+                    addStep(steps, '🔍 Searching…', 'active'); break;
                 case 'search_done':
                     updateProgress('search_done', msg.message, 10);
                     markStepDone(steps);
-                    addStep(steps, `✅ ${msg.totalCount != null ? msg.totalCount + ' total results found. ' : ''}Analyzing ${msg.total != null ? msg.total : '?'} cases`, 'done');
-                    break;
+                    addStep(steps, `✅ ${msg.totalCount != null ? msg.totalCount + ' results found. ' : ''}Analyzing ${msg.total ?? '?'} cases`, 'done'); break;
                 case 'fetch':
                 case 'fetch_progress':
                     const pct = msg.progress ? 10 + (msg.progress / totalCases * 40) : 15;
-                    updateProgress('fetch', msg.message, pct);
-                    break;
+                    updateProgress('fetch', msg.message, pct); break;
                 case 'fetch_done':
                     updateProgress('fetch_done', msg.message, 55);
-                    addStep(steps, '✅ All case texts read', 'done');
-                    break;
+                    addStep(steps, '✅ All case texts read', 'done'); break;
                 case 'summarize':
                     updateProgress('summarize', msg.message, 60);
-                    addStep(steps, '🧠 Summarizing via AI...', 'active');
-                    break;
+                    addStep(steps, '🧠 Summarizing via AI…', 'active'); break;
                 case 'summarize_done':
                     updateProgress('summarize_done', msg.message, 80);
                     markStepDone(steps);
-                    addStep(steps, '✅ Summaries complete', 'done');
-                    break;
+                    addStep(steps, '✅ Summaries complete', 'done'); break;
                 case 'rank':
                     updateProgress('rank', msg.message, 85);
-                    addStep(steps, '📊 Ranking by relevance...', 'active');
-                    break;
+                    addStep(steps, '📊 Ranking by relevance…', 'active'); break;
                 case 'done':
                     updateProgress('done', '✅ Analysis complete!', 100);
                     markStepDone(steps);
-                    addStep(steps, '✅ Rankings ready', 'done');
-                    break;
+                    addStep(steps, '✅ Rankings ready', 'done'); break;
             }
         }
 
         function updateProgress(step, message, pct) {
             document.getElementById('progressStatus').textContent = message;
             document.getElementById('progressBar').style.width = pct + '%';
-            if (step === 'done') {
-                document.getElementById('progressStatus').classList.remove('pulsing');
-            } else {
-                document.getElementById('progressStatus').classList.add('pulsing');
-            }
+            const el = document.getElementById('progressStatus');
+            if (step === 'done') el.classList.remove('pulsing');
+            else el.classList.add('pulsing');
         }
 
         function addStep(container, text, cls) {
@@ -1275,20 +1571,16 @@
             if (active) { active.classList.remove('active'); active.classList.add('done'); }
         }
 
-        // ── Show Results ──
+        // ══ Show Results ══
         function showResults(data) {
-            document.getElementById('progressSection').style.display = 'none';
-            document.getElementById('resultsSection').style.display = 'block';
-            document.getElementById('chatSection').style.display = 'block';
+            goTo('s-results', 4);
             setStatus('ready', 'Analysis complete');
 
             const rankings = data.rankings || [];
             const top20 = rankings.slice(0, 20);
-
             const totalAnalyzed = data._totalAnalyzed || rankings.length;
             document.getElementById('resultsCount').textContent = `Showing top ${top20.length} of ${totalAnalyzed} analyzed`;
 
-            // Recommendation
             if (data.recommendation) {
                 document.getElementById('recommendationBox').innerHTML = `
                     <div class="recommendation-box">
@@ -1297,18 +1589,18 @@
                     </div>`;
             }
 
-            // Ranking cards
             const grid = document.getElementById('rankingGrid');
             grid.innerHTML = top20.map((r, i) => {
-                const scoreClass = r.score >= 70 ? 'high' : r.score >= 40 ? 'mid' : 'low';
+                const sc = r.score >= 70 ? 'high' : r.score >= 40 ? 'mid' : 'low';
+                const categoryLabel = r.category || (r.score >= 90 ? 'Direct' : r.score >= 70 ? 'Strong' : r.score >= 50 ? 'Moderate' : r.score >= 30 ? 'Weak' : 'Not Relevant');
                 return `<div class="ranking-card">
-                    <div class="score-circle ${scoreClass}">${r.score}</div>
+                    <div class="score-circle ${sc}">${r.score}</div>
                     <div class="ranking-info">
                         <h3>${esc(r.heading || r.filename || 'Case ' + (i + 1))}</h3>
                         <div class="ranking-meta">
                             ${r.court ? `<span>🏛 ${esc(r.court)}</span>` : ''}
                             ${r.date ? `<span>📅 ${r.date.split('T')[0]}</span>` : ''}
-                            <span>ID: ${esc(r.id || '')}</span>
+                            <span><span class="score-badge ${sc}">${esc(categoryLabel)}</span></span>
                         </div>
                         <div class="ranking-reason">💡 ${esc(r.reason || '')}</div>
                     </div>
@@ -1329,16 +1621,10 @@
                     </div>` : ''}
                 </div>`;
             }).join('');
-
-            // Scroll to results
-            document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth' });
         }
 
-        // ── Preview ──
-        function toggleSummary(id) {
-            const el = document.getElementById(id);
-            if (el) el.classList.toggle('open');
-        }
+        // ── Preview / Download ──
+        function toggleSummary(id) { document.getElementById(id)?.classList.toggle('open'); }
 
         async function previewCase(id, title) {
             document.getElementById('previewTitle').textContent = title || 'Case Preview';
@@ -1353,7 +1639,6 @@
             }
         }
 
-        // ── Download ──
         async function downloadOne(btn, id, title) {
             btn.disabled = true;
             btn.innerHTML = '<div class="spinner"></div>';
@@ -1364,41 +1649,28 @@
                     body: JSON.stringify({ caseId: id, title })
                 });
                 btn.innerHTML = '<span class="material-icons-round" style="font-size:14px">check</span> Done';
-                btn.style.borderColor = 'var(--success)';
-                btn.style.color = 'var(--success)';
-                btn.style.background = 'transparent';
-            } catch {
-                btn.innerHTML = 'Error';
-                btn.disabled = false;
-            }
+                btn.style.borderColor = 'var(--success)'; btn.style.color = 'var(--success)'; btn.style.background = 'transparent';
+            } catch { btn.innerHTML = 'Error'; btn.disabled = false; }
         }
 
-        // ── Follow-up chat ──
+        // ── Chat ──
         async function sendFollowup() {
             const input = document.getElementById('chatInput');
             const msg = input.value.trim();
             if (!msg) return;
-
             addChatMsg('user', msg);
             input.value = '';
             document.getElementById('sendBtn').disabled = true;
-
-            const loadingId = addChatMsg('ai', '<div class="spinner"></div>', true);
-
+            const lid = addChatMsg('ai', '<div class="spinner"></div>', true);
             try {
                 const res = await fetch(API + '/api/chat/message', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ message: msg })
                 });
                 const data = await res.json();
-                removeMsg(loadingId);
+                removeMsg(lid);
                 addChatMsg('ai', data.data || data.error || 'No response');
-            } catch (err) {
-                removeMsg(loadingId);
-                addChatMsg('ai', '❌ ' + err.message);
-            }
-
+            } catch (err) { removeMsg(lid); addChatMsg('ai', '❌ ' + err.message); }
             document.getElementById('sendBtn').disabled = false;
         }
 
@@ -1407,10 +1679,8 @@
             const id = 'chat-' + (++chatMsgId);
             const container = document.getElementById('chatMessages');
             const div = document.createElement('div');
-            div.className = `msg ${role}`;
-            div.id = id;
-            div.innerHTML = `
-                <div class="msg-label">${role === 'user' ? 'You' : 'Casebot'}</div>
+            div.className = `msg ${role}`; div.id = id;
+            div.innerHTML = `<div class="msg-label">${role === 'user' ? 'You' : 'Casebot'}</div>
                 <div class="msg-bubble">${isHtml ? content : esc(content).replace(/\n/g, '<br>')}</div>`;
             container.appendChild(div);
             container.scrollTop = container.scrollHeight;
@@ -1422,44 +1692,40 @@
         // ── Utils ──
         function setStatus(type, text) {
             document.getElementById('statusText').textContent = text;
-            const dot = document.getElementById('statusDot');
-            dot.style.background = type === 'ready' ? 'var(--success)' : type === 'loading' ? 'var(--warning)' : 'var(--danger)';
+            document.getElementById('statusDot').style.background =
+                type === 'ready' ? 'var(--success)' : type === 'loading' ? 'var(--warning)' : 'var(--danger)';
         }
 
         function esc(str) {
             if (!str) return '';
-            const d = document.createElement('div');
-            d.textContent = str;
-            return d.innerHTML;
+            const d = document.createElement('div'); d.textContent = str; return d.innerHTML;
         }
 
         function formatSummary(str) {
             if (!str) return '';
-            // Escape HTML first
             let html = esc(str);
-            // Convert **bold** to <strong>
             html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-            // Convert - bullet points at start of lines
             html = html.replace(/^- /gm, '• ');
-            // Convert newlines to <br>
             html = html.replace(/\n/g, '<br>');
             return html;
         }
 
-        // ── New Analysis ──
-        function newAnalysis() {
-            document.getElementById('inputSection').style.display = 'block';
-            document.getElementById('refineSection').style.display = 'none';
-            document.getElementById('progressSection').style.display = 'none';
-            document.getElementById('resultsSection').style.display = 'none';
-            document.getElementById('chatSection').style.display = 'none';
-            document.getElementById('progressSteps').innerHTML = '';
+        function newSearch() {
+            chips = []; currentNarrative = ''; currentKeywords = ''; currentFilters = {};
+            document.getElementById('narrative').value = '';
+            document.getElementById('rankingGrid').innerHTML = '';
+            document.getElementById('recommendationBox').innerHTML = '';
+            document.getElementById('chatMessages').innerHTML = '';
+            document.getElementById('stepIndicatorWrap').style.display = 'block';
+            goTo('s-narrative', 1);
             setStatus('ready', 'Ready');
         }
 
-        // Enter key on keywords
-        document.getElementById('keywords').addEventListener('keydown', e => {
-            if (e.key === 'Enter') { e.preventDefault(); document.getElementById('context').focus(); }
+        // Enter on narrative to proceed
+        document.getElementById('narrative').addEventListener('keydown', e => {
+            if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+                e.preventDefault(); startKeywordGeneration();
+            }
         });
     </script>
 </body>
